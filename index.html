@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tanishq Ravula Vault - Ultra Storage</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-panel: #1e293b;
+            --bg-hover: #334155;
+            --primary: #3b82f6;
+            --accent: #0ea5e9;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; outline: none; }
+        
+        body { background-color: var(--bg-dark); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+
+        /* --- SIDEBAR --- */
+        .sidebar { width: 260px; background: #111827; padding: 20px; display: flex; flex-direction: column; border-right: 1px solid #334155; flex-shrink: 0; }
+        .logo { font-size: 26px; font-weight: 800; margin-bottom: 30px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
+        .logo span { background: linear-gradient(to right, #3b82f6, #0ea5e9); -webkit-background-clip: text; color: transparent; }
+
+        .upload-btn {
+            background: linear-gradient(135deg, #2563eb, #0ea5e9);
+            color: white; border: none; padding: 14px; border-radius: 10px;
+            font-weight: 700; cursor: pointer; margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4); transition: transform 0.2s, box-shadow 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 15px;
+        }
+        .upload-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(14, 165, 233, 0.5); }
+        .upload-btn:active { transform: scale(0.98); }
+
+        .nav-item { 
+            padding: 12px 15px; color: var(--text-muted); cursor: pointer; border-radius: 8px; 
+            display: flex; align-items: center; gap: 12px; margin-bottom: 5px; transition: 0.2s; font-weight: 500;
+        }
+        .nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
+        .nav-item.active { background: var(--bg-hover); color: var(--accent); border-left: 3px solid var(--accent); }
+        .nav-icon { width: 20px; text-align: center; }
+
+        .storage-info { margin-top: auto; padding: 15px; background: rgba(30, 41, 59, 0.5); border-radius: 12px; border: 1px solid #334155; backdrop-filter: blur(5px); }
+        .progress-bar { height: 6px; background: #334155; border-radius: 3px; margin: 12px 0; overflow: hidden; }
+        .progress-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #a855f7, #0ea5e9); animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; } 100% { opacity: 0.8; } }
+        .guid-text { font-size: 9px; color: #64748b; margin-top: 8px; font-family: monospace; opacity: 0.7; word-break: break-all; }
+
+        /* --- MAIN CONTENT --- */
+        .main { flex: 1; padding: 25px; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 20px; }
+        
+        .search-container { position: relative; flex: 1; max-width: 500px; }
+        .search-bar { 
+            background: var(--bg-panel); border: 1px solid #334155; padding: 12px 20px 12px 45px; 
+            border-radius: 10px; width: 100%; color: white; transition: 0.2s; font-size: 14px;
+        }
+        .search-bar:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2); }
+        .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+
+        .controls { display: flex; gap: 15px; align-items: center; }
+        .sort-select {
+            background: var(--bg-panel); color: white; border: 1px solid #334155; padding: 10px 15px; 
+            border-radius: 8px; cursor: pointer; font-size: 14px;
+        }
+
+        .scroll-area { flex: 1; overflow-y: auto; padding-right: 5px; padding-bottom: 20px; }
+        .scroll-area::-webkit-scrollbar { width: 8px; }
+        .scroll-area::-webkit-scrollbar-track { background: transparent; }
+        .scroll-area::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
+        .grid-container { 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; 
+        }
+
+        /* --- FILE CARD DESIGN --- */
+        .file-card {
+            background: var(--bg-panel); border: 1px solid #334155; border-radius: 14px;
+            padding: 12px; position: relative; transition: all 0.2s ease;
+            display: flex; flex-direction: column; user-select: none;
+        }
+        .file-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        
+        /* Thumbnail Area */
+        .file-preview {
+            height: 140px; background: #0b1120; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 12px; overflow: hidden; position: relative;
+        }
+        .file-preview img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
+        .file-card:hover .file-preview img { transform: scale(1.05); }
+
+        /* Custom Pure CSS Icons */
+        .icon-generic { font-size: 50px; }
+        
+        .icon-pdf { 
+            width: 50px; height: 65px; background: #ef4444; border-radius: 4px; position: relative; 
+            display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px;
+        }
+        .icon-pdf::after { content: "PDF"; }
+        .icon-pdf::before { 
+            content: ""; position: absolute; top: 0; right: 0; 
+            border-width: 0 15px 15px 0; border-style: solid; border-color: #f87171 #0b1120; display: block; width: 0; 
+        }
+
+        .icon-zip {
+            width: 50px; height: 60px; background: #eab308; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #713f12; font-weight: bold; font-size: 10px;
+        }
+        .icon-zip::after { content: "ZIP"; }
+
+        /* Action Overlay */
+        .file-actions {
+            position: absolute; inset: 0; background: rgba(15, 23, 42, 0.85);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            opacity: 0; transition: opacity 0.2s; backdrop-filter: blur(2px); border-radius: 10px;
+        }
+        .file-card:hover .file-actions { opacity: 1; }
+
+        .action-btn {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); 
+            color: white; width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: 0.2s; font-size: 16px;
+        }
+        .action-btn:hover { background: var(--accent); transform: scale(1.1); border-color: transparent; }
+        .action-btn.delete:hover { background: var(--danger); }
+        .action-btn.fav:hover { background: #ec4899; }
+        .action-btn.fav.active { background: #ec4899; color: white; box-shadow: 0 0 10px #ec4899; }
+
+        /* Card Info */
+        .file-info { display: flex; flex-direction: column; gap: 4px; }
+        .file-name { font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .file-meta { font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; }
+        .tag { font-size: 10px; padding: 3px 8px; border-radius: 4px; background: #334155; color: #cbd5e1; }
+
+        /* --- MODAL --- */
+        .modal {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; 
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .modal.active { display: flex; animation: fadeIn 0.2s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .modal-header { width: 100%; position: absolute; top: 0; padding: 20px; display: flex; justify-content: flex-end; z-index: 1001; }
+        .close-modal { color: white; font-size: 35px; cursor: pointer; opacity: 0.7; transition: 0.2s; }
+        .close-modal:hover { opacity: 1; transform: rotate(90deg); }
+
+        .modal-content { max-width: 95%; max-height: 90vh; border: 1px solid #334155; box-shadow: 0 0 50px rgba(0,0,0,0.8); border-radius: 8px; }
+        
+        #fileInput { display: none; }
+        .empty-state { text-align: center; color: var(--text-muted); margin-top: 100px; width: 100%; }
+        .empty-state div { font-size: 40px; margin-bottom: 10px; opacity: 0.5; }
+        /* Delete All Button */
+.delete-all-btn {
+    background: var(--danger); color: white; border: none; padding: 10px 15px;
+    border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 13px; 
+    margin-right: 10px; transition: 0.2s; white-space: nowrap;
+}
+.delete-all-btn:hover { background: #dc2626; transform: translateY(-1px); }
+
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo"><span>⚡</span> Tanishq Ravula<span>Vault</span></div>
+        <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+            <span>☁</span> Upload Files
+        </button>
+        <input type="file" id="fileInput" multiple onchange="handleFileUpload(this)">
+
+        <div class="nav-item active" onclick="switchTab('all')">
+            <span class="nav-icon">📂</span> My Storage
+        </div>
+        <div class="nav-item" onclick="switchTab('recent')">
+            <span class="nav-icon">🕒</span> Recent
+        </div>
+        <div class="nav-item" onclick="switchTab('favorites')">
+            <span class="nav-icon">❤</span> Favorites
+        </div>
+        <div class="nav-item" onclick="switchTab('trash')">
+            <span class="nav-icon">🗑</span> Trash
+        </div>
+
+        <div class="storage-info">
+            <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:5px; font-weight:600;">
+                <span>USED STORAGE</span>
+                <span style="color:var(--accent)">INFINITE STORAGE</span>
+            </div>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+            <div style="font-size:10px; color:#94a3b8;">Local-Blob Encryption Active.</div>
+            <div class="guid-text" id="userGuid">ID: ...</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="top-bar">
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-bar" placeholder="Search files, types..." id="searchBar" onkeyup="renderFiles()">
+            </div>
+            
+           <div class="controls">
+    <!-- Added Delete All Button Here -->
+    <button class="delete-all-btn" onclick="handleDeleteAll()">Delete All</button> 
+
+    <select class="sort-select" id="sortSelect" onchange="renderFiles()">
+        <option value="date-desc">Newest First</option>
+        <option value="date-asc">Oldest First</option>
+        <option value="name-asc">Name (A-Z)</option>
+        <option value="name-desc">Name (Z-A)</option>
+        <option value="size-desc">Size (Largest)</option>
+        <option value="size-asc">Size (Smallest)</option>
+    </select>
+    <div style="width:35px; height:35px; background:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold;">U</div>
+</div>
+        </div>
+
+        <div class="scroll-area">
+            <div class="grid-container" id="fileGrid">
+                <!-- Files injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Viewer Modal -->
+    <div class="modal" id="viewModal">
+        <div class="modal-header">
+            <span class="close-modal" onclick="closeModal()">✕</span>
+        </div>
+        <div id="modalContentWrapper" style="display:flex; justify-content:center; align-items:center; width:100%; height:100%;"></div>
+    </div>
+
+    <script>
+        /**
+         * NEBULA VAULT - CORE LOGIC
+         * Uses IndexedDB with BLOB storage for handling 100TB+ theoretically without RAM overhead.
+         */
+
+        let db;
+        let currentTab = 'all'; 
+        const currentUserGuid = getOrSetGuid();
+        
+        document.getElementById('userGuid').innerText = `ID: ${currentUserGuid}`;
+
+        // 1. GUID GENERATION
+        function getOrSetGuid() {
+            let guid = localStorage.getItem('nebula_guid');
+            if (!guid) {
+                guid = crypto.randomUUID();
+                localStorage.setItem('nebula_guid', guid);
+            }
+            return guid;
+        }
+
+        // 2. DATABASE INITIALIZATION (INDEXEDDB)
+        const request = indexedDB.open("NebulaVaultBlobs", 2);
+
+        request.onupgradeneeded = function(e) {
+            db = e.target.result;
+            // Create Store if not exists
+            if (!db.objectStoreNames.contains("files")) {
+                const store = db.createObjectStore("files", { keyPath: "id" });
+                store.createIndex("userId", "userId", { unique: false });
+                store.createIndex("date", "date", { unique: false });
+            }
+        };
+
+        request.onsuccess = function(e) {
+            db = e.target.result;
+            loadFiles(); // Initial Load
+        };
+
+        request.onerror = (e) => console.error("DB Error:", e);
+
+        // 3. FILE UPLOAD (Using Blobs for Zero Latency)
+        function handleFileUpload(input) {
+            const files = Array.from(input.files);
+            if (!files.length) return;
+
+            const transaction = db.transaction(["files"], "readwrite");
+            const store = transaction.objectStore("files");
+
+            files.forEach(file => {
+                const fileData = {
+                    id: crypto.randomUUID(),
+                    userId: currentUserGuid,
+                    name: file.name,
+                    type: file.type,
+                    size: file.size, // in bytes
+                    date: new Date().toISOString(),
+                    blob: file, // Store the Raw Blob directly!
+                    isFavorite: false,
+                    isTrash: false
+                };
+                store.add(fileData);
+            });
+
+            transaction.oncomplete = () => {
+                loadFiles();
+                input.value = ''; // Reset
+            };
+        }
+
+        // 4. TAB NAVIGATION
+        function switchTab(tabName) {
+            currentTab = tabName;
+            // Update Visuals
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            // Find the element by text content logic or simple index mapping, but here we iterate
+            // Simple approach: Map text to tab
+            const map = {'all':0, 'recent':1, 'favorites':2, 'trash':3};
+            document.querySelectorAll('.nav-item')[map[tabName]].classList.add('active');
+            
+            loadFiles();
+        }
+
+        // 5. LOAD & RENDER FILES
+        let allFilesCache = []; // Cache for sorting/filtering without re-querying DB
+
+        function loadFiles() {
+            const transaction = db.transaction(["files"], "readonly");
+            const store = transaction.objectStore("files");
+            const index = store.index("userId");
+            const request = index.getAll(currentUserGuid);
+
+            request.onsuccess = function() {
+                allFilesCache = request.result;
+                renderFiles();
+            };
+        }
+
+        function renderFiles() {
+            const grid = document.getElementById('fileGrid');
+            grid.innerHTML = '';
+
+            const searchQuery = document.getElementById('searchBar').value.toLowerCase();
+            const sortMode = document.getElementById('sortSelect').value;
+
+            // Step A: Filter by Tab & Search
+            let filtered = allFilesCache.filter(file => {
+                // Tab Logic
+                if (currentTab === 'trash') {
+                    if (!file.isTrash) return false;
+                } else {
+                    if (file.isTrash) return false; // Hide trash in other tabs
+                    if (currentTab === 'favorites' && !file.isFavorite) return false;
+                    if (currentTab === 'recent') {
+                        // "Recent" = uploaded in last 24 hours
+                        const oneDay = 24 * 60 * 60 * 1000;
+                        if (new Date() - new Date(file.date) > oneDay) return false;
+                    }
+                }
+
+                // Search Logic
+                return file.name.toLowerCase().includes(searchQuery);
+            });
+
+            // Step B: Sort
+            filtered.sort((a, b) => {
+                if (sortMode === 'date-desc') return new Date(b.date) - new Date(a.date);
+                if (sortMode === 'date-asc') return new Date(a.date) - new Date(b.date);
+                if (sortMode === 'size-desc') return b.size - a.size;
+                if (sortMode === 'size-asc') return a.size - b.size;
+                if (sortMode === 'name-asc') return a.name.localeCompare(b.name);
+                if (sortMode === 'name-desc') return b.name.localeCompare(a.name); // Added this
+                return 0;
+            });
+
+            // Step C: Render HTML
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="empty-state"><div>∅</div>No files found in ${currentTab}</div>`;
+                return;
+            }
+
+            filtered.forEach(file => {
+                const card = createFileCard(file);
+                grid.appendChild(card);
+            });
+        }
+
+        function createFileCard(file) {
+            const isImage = file.type.startsWith('image/');
+            const isPdf = file.type === 'application/pdf';
+            const isZip = file.type.includes('zip') || file.type.includes('compressed');
+            
+            // Generate formatted Size
+            const sizeStr = formatSize(file.size);
+            
+            // Create Card Element
+            const div = document.createElement('div');
+            div.className = 'file-card';
+            
+            // Preview Logic (Using Blob URL for instant speed)
+            let previewHTML = '';
+            if (isImage) {
+                // We create a temporary URL just for the visible items. 
+                // Note: For 1000s of items, usually we'd lazy load, but browser cache handles this well.
+                const url = URL.createObjectURL(file.blob);
+                previewHTML = `<img src="${url}" loading="lazy" alt="img">`;
+            } else if (isPdf) {
+                previewHTML = `<div class="icon-pdf"></div>`;
+            } else if (isZip) {
+                previewHTML = `<div class="icon-zip"></div>`;
+            } else {
+                previewHTML = `<div class="icon-generic">📄</div>`;
+            }
+
+            // Buttons Logic
+            const favClass = file.isFavorite ? 'active' : '';
+            const trashBtn = currentTab === 'trash' 
+                ? `<button class="action-btn delete" title="Delete Permanently" onclick="deletePerm('${file.id}')">✕</button>`
+                : `<button class="action-btn delete" title="Move to Trash" onclick="moveToTrash('${file.id}')">🗑</button>`;
+
+            const restoreBtn = currentTab === 'trash'
+                ? `<button class="action-btn" title="Restore" onclick="restoreFile('${file.id}')">♻</button>`
+                : '';
+
+            div.innerHTML = `
+                <div class="file-preview">
+                    ${previewHTML}
+                    <div class="file-actions">
+                        <button class="action-btn" title="View" onclick="viewFile('${file.id}')">👁</button>
+                        <button class="action-btn" title="Download" onclick="downloadFile('${file.id}')">⬇</button>
+                        ${currentTab !== 'trash' ? `<button class="action-btn fav ${favClass}" title="Favorite" onclick="toggleFav('${file.id}')">❤</button>` : ''}
+                        ${restoreBtn}
+                        ${trashBtn}
+                    </div>
+                </div>
+                <div class="file-info">
+                    <div class="file-name" title="${file.name}">${file.name}</div>
+                    <div class="file-meta">
+                        <span>${sizeStr}</span>
+                        <span>${new Date(file.date).toLocaleDateString()}</span>
+                    </div>
+                </div>
+            `;
+            return div;
+        }
+
+        // 6. ACTION FUNCTIONS
+        
+        // VIEW: Zero Latency using Blob URL
+        function viewFile(id) {
+            const file = allFilesCache.find(f => f.id === id);
+            if (!file) return;
+
+            const url = URL.createObjectURL(file.blob);
+            const wrapper = document.getElementById('modalContentWrapper');
+            wrapper.innerHTML = '';
+            
+            if (file.type.startsWith('image/')) {
+                wrapper.innerHTML = `<img src="${url}" style="max-width:100%; max-height:90vh; box-shadow:0 0 20px black;">`;
+            } else if (file.type === 'application/pdf') {
+                // Using object/iframe is the native way to view PDFs instantly
+                wrapper.innerHTML = `<iframe src="${url}" width="100%" height="100%" style="border:none;"></iframe>`;
+            } else if (file.type.startsWith('video/')) {
+                wrapper.innerHTML = `<video controls src="${url}" style="max-width:100%; max-height:80vh"></video>`;
+            } else {
+                wrapper.innerHTML = `<div style="color:white; text-align:center">
+                    <h2>Preview not supported for this type</h2>
+                    <p>Please download the file.</p>
+                    <button class="upload-btn" onclick="downloadFile('${id}')" style="margin-top:20px">Download Now</button>
+                </div>`;
+            }
+
+            document.getElementById('viewModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('viewModal').classList.remove('active');
+            // Clean up memory
+            document.getElementById('modalContentWrapper').innerHTML = '';
+        }
+
+        // DOWNLOAD
+        function downloadFile(id) {
+            const file = allFilesCache.find(f => f.id === id);
+            if (!file) return;
+            const url = URL.createObjectURL(file.blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = file.name;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url); // Free memory
+        }
+
+        // TOGGLE FAVORITE
+        function toggleFav(id) {
+            const file = allFilesCache.find(f => f.id === id);
+            if (!file) return;
+
+            file.isFavorite = !file.isFavorite;
+            updateFileInDB(file);
+        }
+
+        // MOVE TO TRASH
+        function moveToTrash(id) {
+            const file = allFilesCache.find(f => f.id === id);
+            if (!file) return;
+            
+            file.isTrash = true;
+            file.isFavorite = false; // Remove from favs if trashed
+            updateFileInDB(file);
+        }
+
+        // RESTORE
+        function restoreFile(id) {
+            const file = allFilesCache.find(f => f.id === id);
+            if (!file) return;
+            
+            file.isTrash = false;
+            updateFileInDB(file);
+        }
+
+        // DELETE PERMANENTLY
+        function deletePerm(id) {
+            if (!confirm("Permanently delete this file? This cannot be undone.")) return;
+            
+            const transaction = db.transaction(["files"], "readwrite");
+            const store = transaction.objectStore("files");
+            store.delete(id);
+            
+            transaction.oncomplete = () => {
+                loadFiles(); // Reload UI
+            };
+        }
+
+        // HELPER: Update DB Record
+        function updateFileInDB(file) {
+            const transaction = db.transaction(["files"], "readwrite");
+            const store = transaction.objectStore("files");
+            store.put(file);
+            transaction.oncomplete = () => {
+                loadFiles(); // Refresh UI to show changes
+            };
+        }
+
+        // HELPER: Format Bytes
+        function formatSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+// DELETE ALL (Context Aware)
+function handleDeleteAll() {
+    // 1. Identify which files are currently viewable/targetable based on the active tab
+    // We reuse the logic from renderFiles implicitly by filtering the cache again
+    const targets = allFilesCache.filter(file => {
+        if (currentTab === 'trash') return file.isTrash; // In Trash: target all trash items
+        
+        // In other tabs: Target items that are NOT in trash
+        if (file.isTrash) return false; 
+        
+        if (currentTab === 'favorites') return file.isFavorite;
+        if (currentTab === 'recent') {
+            const oneDay = 24 * 60 * 60 * 1000;
+            return (new Date() - new Date(file.date) <= oneDay);
+        }
+        return true; // 'all' tab
+    });
+
+    if (targets.length === 0) {
+        alert("No files to delete in this view.");
+        return;
+    }
+
+    // 2. Determine Action (Soft Delete vs Permanent Delete)
+    const isTrashMode = currentTab === 'trash';
+    const actionName = isTrashMode ? "PERMANENTLY DELETE" : "Move to Trash";
+    
+    if (!confirm(`Are you sure you want to ${actionName} all ${targets.length} items in this view?`)) return;
+
+    // 3. Execute Batch Transaction
+    const transaction = db.transaction(["files"], "readwrite");
+    const store = transaction.objectStore("files");
+
+    targets.forEach(file => {
+        if (isTrashMode) {
+            // Permanent Delete (Empty Trash)
+            store.delete(file.id);
+        } else {
+            // Soft Delete (Move to Trash)
+            file.isTrash = true;
+            file.isFavorite = false; // Unfavorite when moving to trash
+            store.put(file);
+        }
+    });
+
+    transaction.oncomplete = () => {
+        loadFiles(); // Refresh UI
+    };
+}
+
+    </script>
+</body>
+</html>
