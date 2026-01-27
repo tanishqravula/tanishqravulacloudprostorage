@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio of Ravula Tanishq - Software Developer at Deloitte. Expert in GenAI, Python, .NET, and Full Stack Development.">
+    <meta name="author" content="Ravula Tanishq">
+    <title>Ravula Tanishq | Software Developer</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Configuration -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6', // Primary Blue
+                            600: '#2563eb',
+                            900: '#1e3a8a',
+                        },
+                        accent: {
+                            500: '#8b5cf6', // Secondary Purple
+                        },
+                        dark: '#0f172a',
+                        card: '#1e293b',
+                    },
+                    animation: {
+                        'blob': 'blob 10s infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            @apply bg-slate-50 text-slate-900 dark:bg-dark dark:text-slate-100 transition-colors duration-300;
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Scroll Reveal Classes */
+        .reveal-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal-up.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Staggered Delays */
+        .delay-100 { transition-delay: 0.1s; }
+        .delay-200 { transition-delay: 0.2s; }
+        .delay-300 { transition-delay: 0.3s; }
+
+        /* Project Card Hover */
+        .project-card {
+            transition: all 0.4s ease;
+        }
+        .project-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 20px 40px -15px rgba(59, 130, 246, 0.2);
+        }
+        .dark .project-card:hover {
+            box-shadow: 0 20px 40px -15px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Glassmorphism Navbar */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .dark .glass-nav {
+            background: rgba(15, 23, 42, 0.8);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Typing Cursor */
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            background-color: #3b82f6;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    </style>
+</head>
+<body class="antialiased overflow-x-hidden selection:bg-brand-500 selection:text-white">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 glass-nav transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="#" class="font-heading font-bold text-2xl tracking-tight hover:opacity-80 transition-opacity">
+                    Ravula<span class="text-brand-500">.</span>
+                </a>
+
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#about" class="text-sm font-medium hover:text-brand-500 transition-colors">About</a>
+                    <a href="#projects" class="text-sm font-medium hover:text-brand-500 transition-colors">Projects</a>
+                    <a href="#experience" class="text-sm font-medium hover:text-brand-500 transition-colors">Experience</a>
+                    <a href="#contact" class="text-sm font-medium hover:text-brand-500 transition-colors">Contact</a>
+                    
+                    <button id="theme-toggle" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block text-yellow-400"></i>
+                    </button>
+
+                    <a href="resume.pdf" download class="px-6 py-2.5 rounded-full bg-gradient-to-r from-brand-600 to-accent-500 text-white font-semibold text-sm shadow-lg shadow-brand-500/30 hover:shadow-brand-500/50 hover:-translate-y-0.5 transition-all">
+                        Resume <i class="fas fa-download ml-1"></i>
+                    </a>
+                </div>
+
+                <!-- Mobile Button -->
+                <div class="md:hidden flex items-center gap-4">
+                    <button id="theme-toggle-mobile" class="text-xl"><i class="fas fa-moon dark:hidden"></i><i class="fas fa-sun hidden dark:block text-yellow-400"></i></button>
+                    <button id="mobile-menu-btn" class="text-2xl"><i class="fas fa-bars"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-dark border-b dark:border-slate-800 absolute w-full">
+            <div class="px-4 py-4 space-y-3">
+                <a href="#about" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">About</a>
+                <a href="#projects" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">Projects</a>
+                <a href="#experience" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">Experience</a>
+                <a href="resume.pdf" download class="block w-full text-center py-3 bg-brand-600 text-white rounded-lg font-bold">Download Resume</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden" id="home">
+        <!-- Animated Background Blobs -->
+        <div class="absolute top-0 left-0 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob dark:bg-purple-900 dark:opacity-20"></div>
+        <div class="absolute top-0 right-0 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000 dark:bg-blue-900 dark:opacity-20"></div>
+        <div class="absolute -bottom-32 left-20 w-96 h-96 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000 dark:bg-pink-900 dark:opacity-20"></div>
+
+        <div class="relative max-w-7xl mx-auto px-4 text-center z-10">
+            <div class="reveal-up active">
+                <div class="inline-flex items-center px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 mb-6">
+                    <span class="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
+                    <span class="text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">Open to Work</span>
+                </div>
+                
+                <h1 class="font-heading text-6xl md:text-8xl font-extrabold mb-6 tracking-tight leading-tight">
+                    Ravula <span class="text-gradient">Tanishq</span>
+                </h1>
+                
+                <div class="h-10 mb-8 flex justify-center items-center text-xl md:text-3xl text-slate-600 dark:text-slate-300 font-light">
+                    <span>I build&nbsp;</span>
+                    <span id="typewriter" class="font-semibold text-slate-900 dark:text-white border-b-2 border-brand-500"></span>
+                    <span class="cursor">&nbsp;</span>
+                </div>
+
+                <p class="max-w-2xl mx-auto text-slate-500 dark:text-slate-400 mb-10 text-lg leading-relaxed">
+                    Software Developer at <strong>Deloitte</strong>. Expert in building scalable AI solutions, document processing systems, and enterprise-grade full-stack applications.
+                </p>
+
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="#projects" class="px-8 py-4 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold hover:scale-105 transition-transform">
+                        Explore My Work
+                    </a>
+                    <a href="#contact" class="px-8 py-4 rounded-full border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold transition-colors">
+                        Get In Touch
+                    </a>
+                </div>
+
+                <div class="mt-12 flex justify-center gap-8 text-3xl">
+                    <a href="https://linkedin.com/in/tanishq-tanishq-892917241" target="_blank" class="text-slate-400 hover:text-brand-500 transition-colors hover:-translate-y-1 transform duration-300"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://github.com/tanishqravula" target="_blank" class="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors hover:-translate-y-1 transform duration-300"><i class="fab fa-github"></i></a>
+                    <a href="mailto:tanishqravula@gmail.com" class="text-slate-400 hover:text-red-500 transition-colors hover:-translate-y-1 transform duration-300"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-white dark:bg-slate-900/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div class="reveal-up">
+                    <h2 class="font-heading text-4xl font-bold mb-6">About Me</h2>
+                    <p class="text-slate-600 dark:text-slate-300 text-lg leading-relaxed mb-6">
+                        I am a reliable and self-motivated Software Developer with deep expertise in <strong class="text-brand-500">Python, .NET, and Generative AI</strong>. I have a proven track record of building scalable AI solutions and automated document processing systems at an enterprise level.
+                    </p>
+                    <p class="text-slate-600 dark:text-slate-300 text-lg leading-relaxed">
+                        Currently optimizing financial workflows at <strong class="text-green-600">Deloitte</strong>, I leverage cutting-edge tech like LLMs and OCR to solve complex business problems.
+                    </p>
+                    <div class="mt-8 flex gap-4">
+                        <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-center w-32">
+                            <h3 class="font-bold text-2xl text-brand-500">9.2</h3>
+                            <p class="text-xs uppercase text-slate-500 font-semibold">CGPA</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-center w-32">
+                            <h3 class="font-bold text-2xl text-accent-500">7+</h3>
+                            <p class="text-xs uppercase text-slate-500 font-semibold">Projects</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal-up delay-100">
+                    <h3 class="font-heading text-2xl font-bold mb-6">Tech Stack</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-sm font-bold text-slate-400 uppercase mb-3">Core & Backend</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-300 rounded-lg text-sm font-bold">Python</span>
+                                <span class="px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-300 rounded-lg text-sm font-bold">C# .NET</span>
+                                <span class="px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-300 rounded-lg text-sm font-bold">Java</span>
+                                <span class="px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-300 rounded-lg text-sm font-bold">SQL</span>
+                                <span class="px-4 py-2 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-300 rounded-lg text-sm font-bold">Flask</span>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-slate-400 uppercase mb-3">AI & Machine Learning</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-4 py-2 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-300 rounded-lg text-sm font-bold">Generative AI</span>
+                                <span class="px-4 py-2 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-300 rounded-lg text-sm font-bold">LLM (OpenAI/Gemini)</span>
+                                <span class="px-4 py-2 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-300 rounded-lg text-sm font-bold">OCR API</span>
+                                <span class="px-4 py-2 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-300 rounded-lg text-sm font-bold">NLP</span>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-slate-400 uppercase mb-3">Frontend & Tools</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-4 py-2 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-300 rounded-lg text-sm font-bold">Angular</span>
+                                <span class="px-4 py-2 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-300 rounded-lg text-sm font-bold">JavaScript</span>
+                                <span class="px-4 py-2 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-300 rounded-lg text-sm font-bold">MongoDB</span>
+                                <span class="px-4 py-2 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-300 rounded-lg text-sm font-bold">Streamlit</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-24 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-20 reveal-up">
+                <span class="text-brand-500 font-bold tracking-wider uppercase text-sm">Portfolio</span>
+                <h2 class="font-heading text-4xl md:text-5xl font-bold mt-2 mb-6">Selected Projects</h2>
+                <p class="text-slate-500 max-w-2xl mx-auto">A collection of AI-driven applications, full-stack platforms, and enterprise solutions.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- 1. Xtract-K1 -->
+                <article class="project-card group bg-white dark:bg-card rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 h-full flex flex-col reveal-up">
+                    <div class="h-56 bg-gradient-to-br from-slate-700 to-slate-900 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                        <i class="fas fa-file-invoice-dollar text-6xl text-white opacity-80 group-hover:scale-110 transition-transform duration-500"></i>
+                    </div>
+                    <div class="p-8 flex-1 flex flex-col">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-bold font-heading group-hover:text-brand-500 transition-colors">Xtract-K1 (Deloitte)</h3>
+                            <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">Enterprise</span>
+                        </div>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6 flex-1">
+                            Architected an automated K-1 form processing application handling complex tax forms (1065, 1041, 1120s). Engineered a robust backend using C# and .NET to leverage OCR APIs for high-fidelity data extraction. The system streamlines data migration workflows by automatically exporting processed data into complex financial Excel templates, significantly reducing manual effort.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">C#</span>
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">.NET</span>
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">Angular</span>
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">OCR API</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 2. AI Mart -->
+                <article class="project-card group bg-white dark:bg-card rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 h-full flex flex-col reveal-up delay-100">
+                    <div class="h-56 bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center relative overflow-hidden">
+                        <i class="fas fa-brain text-6xl text-white opacity-80 group-hover:scale-110 transition-transform duration-500"></i>
+                    </div>
+                    <div class="p-8 flex-1 flex flex-col">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-bold font-heading group-hover:text-brand-500 transition-colors">AI Mart: Agentic Bot</h3>
+                            <a href="https://tanishqravulaultraaiagenticbot.onrender.com/" target="_blank" class="text-slate-400 hover:text-brand-500"><i class="fas fa-external-link-alt"></i></a>
+                        </div>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6 flex-1">
+                            Engineered a high-performance AI agent capable of multi-modal document processing including PDF, Excel, CSV, PPTX, and Docx. Developed advanced URL scraping capabilities to provide context-aware responses from live websites and YouTube videos. Optimized LLM inference to provide faster and more accurate text generation compared to standard GPT implementations.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">Python</span>
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">LLM</span>
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">NLP</span>
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">Streamlit</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 3. Home-Based Healthcare -->
+                <article class="project-card group bg-white dark:bg-card rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 h-full flex flex-col reveal-up delay-200">
+                    <div class="h-56 bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center relative overflow-hidden">
+                        <i class="fas fa-heartbeat text-6xl text-white opacity-80 group-hover:scale-110 transition-transform duration-500"></i>
+                    </div>
+                    <div class="p-8 flex-1 flex flex-col">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-bold font-heading group-hover:text-brand-500 transition-colors">Home-Based Healthcare</h3>
+                            <a href="https://tanishqravula.github.io/tanishq/" target="_blank" class="text-slate-400 hover:text-brand-500"><i class="fas fa-external-link-alt"></i></a>
+                        </div>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6 flex-1">
+                            Created an integrated healthcare platform featuring ML-based disease prediction models and automated doctor-patient video communication. Developed real-time notification systems for blood bank coordination and yoga guidance modules. Utilized a robust stack including MongoDB and Google Firebase for secure medical data storage and synchronization.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">Python</span>
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">ML</span>
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">MongoDB</span>
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">Firebase</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 4. Affordable Fashion -->
+                <article class="project-card group bg-white dark:bg-card rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 h-full flex flex-col reveal-up">
+                    <div class="h-56 bg-gradient-to-br from-orange-400 to-pink-500 flex items-center justify-center relative overflow-hidden">
+                        <i class="fas fa-shopping-bag text-6xl text-white opacity-80 group-hover:scale-110 transition-transform duration-500"></i>
+                    </div>
+                    <div class="p-8 flex-1 flex flex-col">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-bold font-heading group-hover:text-brand-500 transition-colors">Affordable Fashion</h3>
+                            <a href="https://amazing-lollipop-e0dd4d.netlify.app/" target="_blank" class="text-slate-400 hover:text-brand-500"><i class="fas fa-external-link-alt"></i></a>
+                        </div>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6 flex-1">
+                            Designed and deployed a full-stack e-commerce platform with a focus on responsive UI and seamless user experience. Implemented secure database management for inventory and user sessions using MongoDB. Features include product filtering, cart management, and a smooth checkout process optimized for mobile devices.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">ReactJS</span>
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">NodeJS</span>
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">MongoDB</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 5. EcoAI Assistant -->
+                <article class="project-card group bg-white dark:bg-card rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 h-full flex flex-col reveal-up delay-100">
+                    <div class="h-56 bg-gradient-to-br from-green-600 to-lime-500 flex items-center justify-center relative overflow-hidden">
+                        <i class="fas fa-leaf text-6xl text-white opacity-80 group-hover:scale-110 transition-transform duration-500"></i>
+                    </div>
+                    <div class="p-8 flex-1 flex flex-col">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-bold font-heading group-hover:text-brand-500 transition-colors">EcoAI Waste Manager</h3>
+                            <a href="https://tanishqravulawastemanagementrecommedersystem-2j3v6dupjzpt9lc3n.streamlit.app/" target="_blank" class="text-slate-400 hover:text-brand-500"><i class="fas fa-external-link-alt"></i></a>
+                        </div>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6 flex-1">
+                            Developed 'EcoAI Assistant', an intelligent platform utilizing Deep Learning models to classify waste into 12 distinct categories from images. Integrated Google Gemini AI to provide users with creative DIY reuse suggestions. Implemented real-time geospatial mapping using the Overpass API and Folium to locate nearby recycling facilities.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">GenAI</span>
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">Deep Learning</span>
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">Folium</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 6. Hydro Plants Design -->
+                <article class="project-card group bg-white dark:bg-card rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 h-full flex flex-col reveal-up delay-200">
+                    <div class="h-56 bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center relative overflow-hidden">
+                        <i class="fas fa-water text-6xl text-white opacity-80 group-hover:scale-110 transition-transform duration-500"></i>
+                    </div>
+                    <div class="p-8 flex-1 flex flex-col">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-bold font-heading group-hover:text-brand-500 transition-colors">Hydro Bot Design</h3>
+                            <a href="https://tanishqravulasihgrandfinale-n8acaufzqyq42uibpegcwr.streamlit.app/" target="_blank" class="text-slate-400 hover:text-brand-500"><i class="fas fa-external-link-alt"></i></a>
+                        </div>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6 flex-1">
+                            Deployed 'Hydro Bot' powered by OpenAI GPT/DALL-E 3 and Google Gemini for automated construction guide generation. Built a sophisticated toolkit for engineers using Keras (LSTM) and PyTorch-based GANs to predict optimal plant specifications. Integrated OpenStreetMap for site mapping and automated PDF summary generation.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">OpenAI/DALL-E</span>
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">PyTorch</span>
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">Keras</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 7. Whatsapp & Telegram Bot -->
+                <article class="project-card group bg-white dark:bg-card rounded-3xl overflow-hidden border border-slate-100 dark:border-slate-800 h-full flex flex-col reveal-up">
+                    <div class="h-56 bg-gradient-to-br from-green-500 to-blue-500 flex items-center justify-center relative overflow-hidden">
+                        <i class="fab fa-whatsapp text-6xl text-white opacity-80 group-hover:scale-110 transition-transform duration-500"></i>
+                    </div>
+                    <div class="p-8 flex-1 flex flex-col">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-bold font-heading group-hover:text-brand-500 transition-colors">Whatsapp & Telegram Bot</h3>
+                        </div>
+                        <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6 flex-1">
+                            Your daily partner. Developed innovative automation bots for WhatsApp and Telegram to handle daily essentials such as image generation and maps navigation. Leveraged Flask and LLMs to create an efficient conversational interface for real-time video fetching and news updates, ensuring a seamless user experience.
+                        </p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">Python</span>
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">Flask</span>
+                            <span class="tag bg-slate-100 dark:bg-slate-700 text-xs px-2 py-1 rounded">NLP/LLM</span>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="py-24 bg-white dark:bg-slate-900/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16">
+                <!-- Work -->
+                <div class="reveal-up">
+                    <h2 class="font-heading text-3xl font-bold mb-8 flex items-center">
+                        <span class="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-4 text-blue-600 dark:text-blue-400"><i class="fas fa-briefcase text-lg"></i></span>
+                        Experience
+                    </h2>
+                    <div class="space-y-8 pl-4 border-l-2 border-slate-200 dark:border-slate-700">
+                        <div class="relative pl-8">
+                            <div class="absolute -left-[9px] top-2 h-4 w-4 rounded-full bg-blue-500 ring-4 ring-white dark:ring-dark"></div>
+                            <h3 class="font-bold text-xl">Software Developer</h3>
+                            <div class="text-slate-500 text-sm mb-3">Deloitte | Sept 2024 - Present</div>
+                            <ul class="list-disc list-outside ml-4 text-slate-600 dark:text-slate-300 text-sm space-y-2">
+                                <li>Architect and maintain enterprise-grade applications utilizing C#, SQL, .NET, and Angular Typescript for daily mission-critical operations.</li>
+                                <li>Engineered an automated K-1 form processing application leveraging OCR APIs to extract high-fidelity data from PDF sources.</li>
+                                <li>Streamlined data migration workflows by exporting processed OCR data into complex Excel templates.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Education -->
+                <div class="reveal-up delay-100">
+                    <h2 class="font-heading text-3xl font-bold mb-8 flex items-center">
+                        <span class="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mr-4 text-purple-600 dark:text-purple-400"><i class="fas fa-graduation-cap text-lg"></i></span>
+                        Education
+                    </h2>
+                    <div class="space-y-8 pl-4 border-l-2 border-slate-200 dark:border-slate-700">
+                        <div class="relative pl-8">
+                            <div class="absolute -left-[9px] top-2 h-4 w-4 rounded-full bg-purple-500 ring-4 ring-white dark:ring-dark"></div>
+                            <h3 class="font-bold text-xl">B.E in Computer Science</h3>
+                            <div class="text-slate-500 text-sm mb-1">Vasavi College of Engineering | 2024</div>
+                            <div class="font-bold text-brand-500">CGPA: 9.2</div>
+                        </div>
+                        <div class="relative pl-8">
+                            <div class="absolute -left-[9px] top-2 h-4 w-4 rounded-full bg-slate-300 ring-4 ring-white dark:ring-dark"></div>
+                            <h3 class="font-bold text-lg">Class XII (CBSE)</h3>
+                            <div class="text-slate-500 text-sm mb-1">Sri Chaitanya Techno School | 2020</div>
+                            <div class="text-slate-500 text-sm">Score: 90%</div>
+                        </div>
+                        <div class="relative pl-8">
+                            <div class="absolute -left-[9px] top-2 h-4 w-4 rounded-full bg-slate-300 ring-4 ring-white dark:ring-dark"></div>
+                            <h3 class="font-bold text-lg">Class X (CBSE)</h3>
+                            <div class="text-slate-500 text-sm mb-1">Sri Chaitanya Techno School | 2018</div>
+                            <div class="text-slate-500 text-sm">Score: 90%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements & Certifications -->
+    <section class="py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="font-heading text-4xl font-bold mb-12 text-center reveal-up">Honors & Certifications</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                
+                <!-- Achievements -->
+                <div class="bg-gradient-to-br from-slate-900 to-slate-800 text-white p-10 rounded-3xl shadow-2xl reveal-up">
+                    <h3 class="text-2xl font-bold mb-8 flex items-center"><i class="fas fa-trophy text-yellow-400 mr-3"></i> Achievements</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="text-yellow-400 mr-3 mt-1">★</span>
+                            <span>Awarded <strong>Applause Award</strong> for exceptional performance in Q2 2025 (Deloitte).</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-yellow-400 mr-3 mt-1">★</span>
+                            <span>Winner Of Devpost Student Hacks AI Hackathon.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-yellow-400 mr-3 mt-1">★</span>
+                            <span><strong>SIH-2023 Grand Finalist</strong> (Smart India Hackathon).</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-yellow-400 mr-3 mt-1">★</span>
+                            <span>Awarded 1st prize in project expo in Methodist College of Engineering.</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-yellow-400 mr-3 mt-1">★</span>
+                            <span>Awarded 1st prize in Code Sprint (College Fest).</span>
+                        </li>
+ <li class="flex items-start">
+                            <span class="text-yellow-400 mr-3 mt-1">★</span>
+                            <span>Awarded 1st best theme-based project in college (2023)</span>
+                        </li>
+ <li class="flex items-start">
+                            <span class="text-yellow-400 mr-3 mt-1">★</span>
+                            <span>Awarded Top 5% in introduction to Maclrine Learning (NPTEL) </span>
+                        </li>
+
+                    </ul>
+                </div>
+
+                <!-- Certifications -->
+                <div class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-10 rounded-3xl reveal-up delay-100">
+                    <h3 class="text-2xl font-bold mb-8 flex items-center"><i class="fas fa-certificate text-brand-500 mr-3"></i> Certifications</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-center p-3 bg-white dark:bg-slate-900 rounded-lg shadow-sm">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <span class="font-medium">Intro to Machine Learning (NPTEL - Top 5%)</span>
+                        </li>
+                        <li class="flex items-center p-3 bg-white dark:bg-slate-900 rounded-lg shadow-sm">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <span class="font-medium">Amazon ML Summer School Program (2023)</span>
+                        </li>
+                        <li class="flex items-center p-3 bg-white dark:bg-slate-900 rounded-lg shadow-sm">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <span class="font-medium">Introduction to Cyber Security (CISCO)</span>
+                        </li>
+                        <li class="flex items-center p-3 bg-white dark:bg-slate-900 rounded-lg shadow-sm">
+                            <i class="fas fa-check-circle text-green-500 mr-3"></i>
+                            <span class="font-medium">Intro to Java & Python (Coding Ninjas)</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="py-24 bg-white dark:bg-slate-900/50">
+        <div class="max-w-3xl mx-auto px-4 text-center">
+            <div class="reveal-up">
+                <h2 class="font-heading text-4xl font-bold mb-4">Let's Build Something Amazing</h2>
+                <p class="text-slate-500 mb-10">I'm currently looking for new opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!</p>
+                
+                <div class="bg-white dark:bg-card p-8 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800">
+                    <form action="mailto:tanishqravula@gmail.com" method="post" enctype="text/plain" class="space-y-4 text-left">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold mb-2">Name</label>
+                                <input type="text" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold mb-2">Email</label>
+                                <input type="email" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold mb-2">Message</label>
+                            <textarea rows="4" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-brand-600 to-accent-500 text-white font-bold text-lg hover:shadow-lg hover:opacity-90 transition-all">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-dark text-center">
+        <p class="text-slate-500 text-sm">Designed & Built by <span class="text-slate-900 dark:text-white font-bold">Ravula Tanishq</span> © 2026</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Dark Mode
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeToggleMobile = document.getElementById('theme-toggle-mobile');
+        const html = document.documentElement;
+
+        function toggleTheme() {
+            html.classList.toggle('dark');
+            localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light';
+        }
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            html.classList.add('dark');
+        }
+
+        themeToggle.addEventListener('click', toggleTheme);
+        themeToggleMobile.addEventListener('click', toggleTheme);
+
+        // Mobile Menu
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => menu.classList.toggle('hidden'));
+
+        // Scroll Reveal
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal-up').forEach(el => observer.observe(el));
+
+        // Typewriter Effect
+        const textElement = document.getElementById('typewriter');
+        const phrases = ["AI Solutions", "Enterprise Apps", ".NET Systems", "GenAI Models"];
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function type() {
+            const currentPhrase = phrases[phraseIndex];
+            
+            if (isDeleting) {
+                textElement.textContent = currentPhrase.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                textElement.textContent = currentPhrase.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            if (!isDeleting && charIndex === currentPhrase.length) {
+                isDeleting = true;
+                setTimeout(type, 2000);
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                setTimeout(type, 500);
+            } else {
+                setTimeout(type, isDeleting ? 50 : 100);
+            }
+        }
+        type();
+    </script>
+</body>
+</html>
