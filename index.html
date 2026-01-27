@@ -1,8 +1,9 @@
+<!-- START OF FILE Paste January 27, 2026 - Updated for Mobile/iPad -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tanishq Ravula Vault - Ultra Storage</title>
     <style>
         :root {
@@ -16,14 +17,39 @@
             --danger: #ef4444;
             --success: #10b981;
             --warning: #f59e0b;
+            --sidebar-width: 280px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; outline: none; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; outline: none; -webkit-tap-highlight-color: transparent; }
         
         body { background-color: var(--bg-dark); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
+        /* --- MOBILE HEADER (Visible only on small screens) --- */
+        .mobile-header {
+            display: none;
+            background: #111827;
+            padding: 15px 20px;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #334155;
+            flex-shrink: 0;
+            z-index: 50;
+        }
+        .menu-btn { background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
+
         /* --- SIDEBAR --- */
-        .sidebar { width: 280px; background: #111827; padding: 20px; display: flex; flex-direction: column; border-right: 1px solid #334155; flex-shrink: 0; }
+        .sidebar { 
+            width: var(--sidebar-width); 
+            background: #111827; 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            border-right: 1px solid #334155; 
+            flex-shrink: 0; 
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+
         .logo { font-size: 24px; font-weight: 800; margin-bottom: 30px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
         .logo span { background: linear-gradient(to right, #3b82f6, #0ea5e9); -webkit-background-clip: text; color: transparent; }
 
@@ -45,7 +71,7 @@
         .nav-item.active { background: var(--bg-hover); color: var(--accent); border-left: 3px solid var(--accent); }
         .nav-icon { width: 20px; text-align: center; }
 
-        /* --- AUTH SECTION (NEW) --- */
+        /* --- AUTH SECTION --- */
         .auth-section { margin-top: auto; padding-top: 20px; border-top: 1px solid #334155; }
         .guid-label { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; display: block; }
         .guid-input {
@@ -69,11 +95,12 @@
         @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; } 100% { opacity: 0.8; } }
 
         /* --- MAIN CONTENT --- */
+        .main-container { display: flex; flex-direction: column; flex: 1; height: 100%; overflow: hidden; position: relative; }
         .main { flex: 1; padding: 25px; display: flex; flex-direction: column; overflow: hidden; position: relative; }
         
-        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 20px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 20px; flex-wrap: wrap; }
         
-        .search-container { position: relative; flex: 1; max-width: 500px; }
+        .search-container { position: relative; flex: 1; min-width: 200px; }
         .search-bar { 
             background: var(--bg-panel); border: 1px solid #334155; padding: 12px 20px 12px 45px; 
             border-radius: 10px; width: 100%; color: white; transition: 0.2s; font-size: 14px;
@@ -87,13 +114,13 @@
             border-radius: 8px; cursor: pointer; font-size: 14px;
         }
 
-        .scroll-area { flex: 1; overflow-y: auto; padding-right: 5px; padding-bottom: 20px; }
+        .scroll-area { flex: 1; overflow-y: auto; padding-right: 5px; padding-bottom: 20px; -webkit-overflow-scrolling: touch; }
         .scroll-area::-webkit-scrollbar { width: 8px; }
         .scroll-area::-webkit-scrollbar-track { background: transparent; }
         .scroll-area::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
 
         .grid-container { 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; 
         }
 
         /* --- FILE CARD DESIGN --- */
@@ -101,8 +128,17 @@
             background: var(--bg-panel); border: 1px solid #334155; border-radius: 14px;
             padding: 12px; position: relative; transition: all 0.2s ease;
             display: flex; flex-direction: column; user-select: none;
+            cursor: pointer;
         }
-        .file-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        /* Desktop Hover */
+        @media (hover: hover) {
+            .file-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+            .file-card:hover .file-preview img { transform: scale(1.05); }
+            .file-card:hover .file-actions { opacity: 1; pointer-events: auto; }
+        }
+        /* Mobile Active State (triggered by JS) */
+        .file-card.mobile-active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+        .file-card.mobile-active .file-actions { opacity: 1; pointer-events: auto; background: rgba(15, 23, 42, 0.9); }
         
         /* Thumbnail Area */
         .file-preview {
@@ -111,7 +147,6 @@
             margin-bottom: 12px; overflow: hidden; position: relative;
         }
         .file-preview img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
-        .file-card:hover .file-preview img { transform: scale(1.05); }
 
         /* Custom Pure CSS Icons */
         .icon-generic { font-size: 50px; }
@@ -134,11 +169,10 @@
         /* Action Overlay */
         .file-actions {
             position: absolute; inset: 0; background: rgba(15, 23, 42, 0.85);
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            opacity: 0; transition: opacity 0.2s; backdrop-filter: blur(2px); border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            opacity: 0; pointer-events: none; transition: opacity 0.2s; backdrop-filter: blur(2px); border-radius: 10px;
         }
-        .file-card:hover .file-actions { opacity: 1; }
-
+        
         .action-btn {
             background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); 
             color: white; width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
@@ -153,21 +187,20 @@
         .file-info { display: flex; flex-direction: column; gap: 4px; }
         .file-name { font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .file-meta { font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; }
-        .tag { font-size: 10px; padding: 3px 8px; border-radius: 4px; background: #334155; color: #cbd5e1; }
 
         /* --- MODAL --- */
         .modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; 
             display: none; flex-direction: column; align-items: center; justify-content: center;
         }
         .modal.active { display: flex; animation: fadeIn 0.2s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        .modal-header { width: 100%; position: absolute; top: 0; padding: 20px; display: flex; justify-content: flex-end; z-index: 1001; }
-        .close-modal { color: white; font-size: 35px; cursor: pointer; opacity: 0.7; transition: 0.2s; }
-        .close-modal:hover { opacity: 1; transform: rotate(90deg); }
+        .modal-header { width: 100%; position: absolute; top: 0; padding: 20px; display: flex; justify-content: flex-end; z-index: 2001; }
+        .close-modal { color: white; font-size: 40px; cursor: pointer; opacity: 0.8; transition: 0.2s; padding: 10px; }
+        .close-modal:hover { opacity: 1; color: var(--danger); }
 
-        .modal-content { max-width: 95%; max-height: 90vh; border: 1px solid #334155; box-shadow: 0 0 50px rgba(0,0,0,0.8); border-radius: 8px; }
+        .modal-content { max-width: 95%; max-height: 85vh; border: 1px solid #334155; box-shadow: 0 0 50px rgba(0,0,0,0.8); border-radius: 8px; }
         
         #fileInput { display: none; }
         .empty-state { text-align: center; color: var(--text-muted); margin-top: 100px; width: 100%; }
@@ -180,14 +213,61 @@
         }
         .delete-all-btn:hover { background: #dc2626; transform: translateY(-1px); }
 
+        /* --- MOBILE OVERLAY --- */
+        .sidebar-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 90;
+            display: none; backdrop-filter: blur(2px);
+        }
+
+        /* --- MEDIA QUERIES FOR RESPONSIVENESS --- */
+        @media (max-width: 900px) {
+            body { flex-direction: column; }
+            
+            .mobile-header { display: flex; }
+            
+            .sidebar {
+                position: fixed; top: 0; left: 0; height: 100%;
+                transform: translateX(-100%);
+                box-shadow: 5px 0 30px rgba(0,0,0,0.5);
+            }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-overlay.active { display: block; }
+            
+            .main { padding: 15px; width: 100%; }
+            
+            .grid-container {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 10px;
+            }
+            
+            .file-preview { height: 110px; }
+            
+            /* Stack controls on mobile */
+            .top-bar { flex-direction: column; align-items: stretch; gap: 15px; }
+            .controls { justify-content: space-between; }
+            .search-container { max-width: 100%; }
+            
+            /* Adjust button sizes for touch */
+            .action-btn { width: 42px; height: 42px; font-size: 18px; }
+        }
+
     </style>
 </head>
 <body>
 
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <div class="logo" style="margin:0; font-size: 20px;"><span>⚡</span> Tanishq<span>Vault</span></div>
+        <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+    </div>
+
+    <!-- Backdrop for Mobile Sidebar -->
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <div class="logo"><span>⚡</span> Tanishq Ravula<span>Vault</span></div>
-        <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+        <button class="upload-btn" onclick="triggerUpload()">
             <span>☁</span> Upload Files
         </button>
         <input type="file" id="fileInput" multiple onchange="handleFileUpload(this)">
@@ -225,31 +305,31 @@
     </div>
 
     <!-- Main Content -->
-    <div class="main">
-        <div class="top-bar">
-            <div class="search-container">
-                <span class="search-icon">🔍</span>
-                <input type="text" class="search-bar" placeholder="Search files, types..." id="searchBar" onkeyup="renderFiles()">
-            </div>
-            
-           <div class="controls">
-                <button class="delete-all-btn" onclick="handleDeleteAll()">Delete All</button> 
+    <div class="main-container">
+        <div class="main">
+            <div class="top-bar">
+                <div class="search-container">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-bar" placeholder="Search files..." id="searchBar" onkeyup="renderFiles()">
+                </div>
+                
+            <div class="controls">
+                    <button class="delete-all-btn" onclick="handleDeleteAll()">Delete All</button> 
 
-                <select class="sort-select" id="sortSelect" onchange="renderFiles()">
-                    <option value="date-desc">Newest First</option>
-                    <option value="date-asc">Oldest First</option>
-                    <option value="name-asc">Name (A-Z)</option>
-                    <option value="name-desc">Name (Z-A)</option>
-                    <option value="size-desc">Size (Largest)</option>
-                    <option value="size-asc">Size (Smallest)</option>
-                </select>
-                <div style="width:35px; height:35px; background:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold;">U</div>
+                    <select class="sort-select" id="sortSelect" onchange="renderFiles()">
+                        <option value="date-desc">Newest First</option>
+                        <option value="date-asc">Oldest First</option>
+                        <option value="name-asc">Name (A-Z)</option>
+                        <option value="name-desc">Name (Z-A)</option>
+                        <option value="size-desc">Size (Largest)</option>
+                    </select>
+                </div>
             </div>
-        </div>
 
-        <div class="scroll-area">
-            <div class="grid-container" id="fileGrid">
-                <!-- Files injected here -->
+            <div class="scroll-area">
+                <div class="grid-container" id="fileGrid">
+                    <!-- Files injected here -->
+                </div>
             </div>
         </div>
     </div>
@@ -259,24 +339,23 @@
         <div class="modal-header">
             <span class="close-modal" onclick="closeModal()">✕</span>
         </div>
-        <div id="modalContentWrapper" style="display:flex; justify-content:center; align-items:center; width:100%; height:100%;"></div>
+        <div id="modalContentWrapper" style="display:flex; justify-content:center; align-items:center; width:100%; height:100%; padding: 20px;"></div>
     </div>
 
     <script>
         /**
          * TANISHQ RAVULA VAULT - CORE LOGIC
+         * Updated for Mobile Responsiveness
          */
 
         let db;
         let currentTab = 'all'; 
         let currentUserGuid = '';
-        let allFilesCache = []; // Cache for sorting/filtering
+        let allFilesCache = []; 
 
-        // 1. INITIALIZATION
         init();
 
         function init() {
-            // Check local storage or generate new
             const savedGuid = localStorage.getItem('nebula_guid');
             if (savedGuid) {
                 currentUserGuid = savedGuid;
@@ -284,35 +363,29 @@
                 currentUserGuid = crypto.randomUUID();
                 localStorage.setItem('nebula_guid', currentUserGuid);
             }
-            // Populate textarea
             document.getElementById('guidInput').value = currentUserGuid;
         }
 
-        // 2. GUID MANAGEMENT (NEW FEATURES)
-        function loadUserFromInput() {
-            const inputVal = document.getElementById('guidInput').value.trim();
-            if (!inputVal) {
-                alert("Please enter a valid GUID.");
-                return;
-            }
-            // Switch User
-            currentUserGuid = inputVal;
-            localStorage.setItem('nebula_guid', currentUserGuid);
-            loadFiles(); // Reloads files for THIS specific GUID
-            alert(`Switched to User ID: ${currentUserGuid}\nYour files are loaded.`);
+        // --- MOBILE UI FUNCTIONS ---
+        function toggleSidebar() {
+            const sb = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            sb.classList.toggle('active');
+            overlay.classList.toggle('active');
         }
 
-        function generateNewUser() {
-            if(!confirm("Generate a NEW User ID? Your current view will be cleared (files remain safe in the other ID).")) return;
-            
-            const newGuid = crypto.randomUUID();
-            currentUserGuid = newGuid;
-            localStorage.setItem('nebula_guid', currentUserGuid);
-            document.getElementById('guidInput').value = currentUserGuid;
-            loadFiles(); // Will be empty initially
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('active');
+            document.querySelector('.sidebar-overlay').classList.remove('active');
         }
 
-        // 3. DATABASE INITIALIZATION (INDEXEDDB)
+        function triggerUpload() {
+            document.getElementById('fileInput').click();
+            // Close sidebar on mobile after clicking upload
+            if (window.innerWidth <= 900) closeSidebar();
+        }
+
+        // --- CORE DATABASE FUNCTIONS ---
         const request = indexedDB.open("NebulaVaultBlobs", 2);
 
         request.onupgradeneeded = function(e) {
@@ -326,12 +399,32 @@
 
         request.onsuccess = function(e) {
             db = e.target.result;
-            loadFiles(); // Initial Load
+            loadFiles(); 
         };
 
         request.onerror = (e) => console.error("DB Error:", e);
 
-        // 4. FILE UPLOAD
+        // --- KEY MANAGEMENT ---
+        function loadUserFromInput() {
+            const inputVal = document.getElementById('guidInput').value.trim();
+            if (!inputVal) { alert("Please enter a valid GUID."); return; }
+            currentUserGuid = inputVal;
+            localStorage.setItem('nebula_guid', currentUserGuid);
+            loadFiles();
+            alert(`Switched to User ID: ${currentUserGuid}`);
+            if (window.innerWidth <= 900) closeSidebar();
+        }
+
+        function generateNewUser() {
+            if(!confirm("Generate a NEW User ID?")) return;
+            const newGuid = crypto.randomUUID();
+            currentUserGuid = newGuid;
+            localStorage.setItem('nebula_guid', currentUserGuid);
+            document.getElementById('guidInput').value = currentUserGuid;
+            loadFiles();
+            if (window.innerWidth <= 900) closeSidebar();
+        }
+
         function handleFileUpload(input) {
             const files = Array.from(input.files);
             if (!files.length) return;
@@ -342,7 +435,7 @@
             files.forEach(file => {
                 const fileData = {
                     id: crypto.randomUUID(),
-                    userId: currentUserGuid, // LINKED TO CURRENT GUID
+                    userId: currentUserGuid, 
                     name: file.name,
                     type: file.type,
                     size: file.size, 
@@ -360,20 +453,18 @@
             };
         }
 
-        // 5. TAB NAVIGATION
         function switchTab(tabName) {
             currentTab = tabName;
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             const map = {'all':0, 'recent':1, 'favorites':2, 'trash':3};
             document.querySelectorAll('.nav-item')[map[tabName]].classList.add('active');
             loadFiles();
+            if (window.innerWidth <= 900) closeSidebar();
         }
 
-        // 6. LOAD & RENDER FILES (SCALABLE VIA GUID INDEX)
         function loadFiles() {
-            if (!db) return; // Wait for DB init
+            if (!db) return; 
 
-            // FAST: Only gets files matching the currentUserGuid index
             const transaction = db.transaction(["files"], "readonly");
             const store = transaction.objectStore("files");
             const index = store.index("userId");
@@ -437,6 +528,8 @@
             
             const div = document.createElement('div');
             div.className = 'file-card';
+            // Mobile Interaction: Toggle class on click
+            div.onclick = (e) => toggleCardMobile(e, div);
             
             let previewHTML = '';
             if (isImage) {
@@ -451,21 +544,25 @@
             }
 
             const favClass = file.isFavorite ? 'active' : '';
+            
+            // Generate Buttons
+            const viewBtn = `<button class="action-btn" title="View" onclick="viewFile('${file.id}', event)">👁</button>`;
+            const dlBtn = `<button class="action-btn" title="Download" onclick="downloadFile('${file.id}', event)">⬇</button>`;
+            const favBtn = `<button class="action-btn fav ${favClass}" title="Favorite" onclick="toggleFav('${file.id}', event)">❤</button>`;
             const trashBtn = currentTab === 'trash' 
-                ? `<button class="action-btn delete" title="Delete Permanently" onclick="deletePerm('${file.id}')">✕</button>`
-                : `<button class="action-btn delete" title="Move to Trash" onclick="moveToTrash('${file.id}')">🗑</button>`;
-
+                ? `<button class="action-btn delete" title="Delete Permanently" onclick="deletePerm('${file.id}', event)">✕</button>`
+                : `<button class="action-btn delete" title="Move to Trash" onclick="moveToTrash('${file.id}', event)">🗑</button>`;
             const restoreBtn = currentTab === 'trash'
-                ? `<button class="action-btn" title="Restore" onclick="restoreFile('${file.id}')">♻</button>`
+                ? `<button class="action-btn" title="Restore" onclick="restoreFile('${file.id}', event)">♻</button>`
                 : '';
 
             div.innerHTML = `
                 <div class="file-preview">
                     ${previewHTML}
                     <div class="file-actions">
-                        <button class="action-btn" title="View" onclick="viewFile('${file.id}')">👁</button>
-                        <button class="action-btn" title="Download" onclick="downloadFile('${file.id}')">⬇</button>
-                        ${currentTab !== 'trash' ? `<button class="action-btn fav ${favClass}" title="Favorite" onclick="toggleFav('${file.id}')">❤</button>` : ''}
+                        ${viewBtn}
+                        ${dlBtn}
+                        ${currentTab !== 'trash' ? favBtn : ''}
                         ${restoreBtn}
                         ${trashBtn}
                     </div>
@@ -481,8 +578,25 @@
             return div;
         }
 
-        // 7. ACTION FUNCTIONS
-        function viewFile(id) {
+        // Handle Mobile Tap Logic
+        function toggleCardMobile(e, card) {
+            // If we are on mobile (check width or if no hover capability)
+            if (window.innerWidth <= 900) {
+                // If clicking an actual button, do nothing (let button handler work)
+                if(e.target.closest('.action-btn')) return;
+                
+                // Remove active class from other cards
+                document.querySelectorAll('.file-card').forEach(c => {
+                    if (c !== card) c.classList.remove('mobile-active');
+                });
+                
+                // Toggle this card
+                card.classList.toggle('mobile-active');
+            }
+        }
+
+        function viewFile(id, e) {
+            if(e) e.stopPropagation(); // Prevent card toggle
             const file = allFilesCache.find(f => f.id === id);
             if (!file) return;
 
@@ -491,16 +605,16 @@
             wrapper.innerHTML = '';
             
             if (file.type.startsWith('image/')) {
-                wrapper.innerHTML = `<img src="${url}" style="max-width:100%; max-height:90vh; box-shadow:0 0 20px black;">`;
+                wrapper.innerHTML = `<img src="${url}" style="max-width:100%; max-height:85vh; border-radius:4px;">`;
             } else if (file.type === 'application/pdf') {
                 wrapper.innerHTML = `<iframe src="${url}" width="100%" height="100%" style="border:none;"></iframe>`;
             } else if (file.type.startsWith('video/')) {
                 wrapper.innerHTML = `<video controls src="${url}" style="max-width:100%; max-height:80vh"></video>`;
             } else {
                 wrapper.innerHTML = `<div style="color:white; text-align:center">
-                    <h2>Preview not supported for this type</h2>
-                    <p>Please download the file.</p>
-                    <button class="upload-btn" onclick="downloadFile('${id}')" style="margin-top:20px">Download Now</button>
+                    <h2>Preview not available</h2>
+                    <p style="margin:10px 0; color:#94a3b8">This file type cannot be previewed in the browser.</p>
+                    <button class="upload-btn" onclick="downloadFile('${id}')">Download File</button>
                 </div>`;
             }
             document.getElementById('viewModal').classList.add('active');
@@ -511,7 +625,8 @@
             document.getElementById('modalContentWrapper').innerHTML = '';
         }
 
-        function downloadFile(id) {
+        function downloadFile(id, e) {
+            if(e) e.stopPropagation();
             const file = allFilesCache.find(f => f.id === id);
             if (!file) return;
             const url = URL.createObjectURL(file.blob);
@@ -524,14 +639,16 @@
             URL.revokeObjectURL(url); 
         }
 
-        function toggleFav(id) {
+        function toggleFav(id, e) {
+            if(e) e.stopPropagation();
             const file = allFilesCache.find(f => f.id === id);
             if (!file) return;
             file.isFavorite = !file.isFavorite;
             updateFileInDB(file);
         }
 
-        function moveToTrash(id) {
+        function moveToTrash(id, e) {
+            if(e) e.stopPropagation();
             const file = allFilesCache.find(f => f.id === id);
             if (!file) return;
             file.isTrash = true;
@@ -539,15 +656,17 @@
             updateFileInDB(file);
         }
 
-        function restoreFile(id) {
+        function restoreFile(id, e) {
+            if(e) e.stopPropagation();
             const file = allFilesCache.find(f => f.id === id);
             if (!file) return;
             file.isTrash = false;
             updateFileInDB(file);
         }
 
-        function deletePerm(id) {
-            if (!confirm("Permanently delete this file? This cannot be undone.")) return;
+        function deletePerm(id, e) {
+            if(e) e.stopPropagation();
+            if (!confirm("Permanently delete this file?")) return;
             const transaction = db.transaction(["files"], "readwrite");
             const store = transaction.objectStore("files");
             store.delete(id);
@@ -582,14 +701,13 @@
             });
 
             if (targets.length === 0) {
-                alert("No files to delete in this view.");
+                alert("No files to delete here.");
                 return;
             }
 
             const isTrashMode = currentTab === 'trash';
-            const actionName = isTrashMode ? "PERMANENTLY DELETE" : "Move to Trash";
             
-            if (!confirm(`Are you sure you want to ${actionName} all ${targets.length} items in this view?`)) return;
+            if (!confirm(`Apply action to all ${targets.length} items?`)) return;
 
             const transaction = db.transaction(["files"], "readwrite");
             const store = transaction.objectStore("files");
