@@ -1,9 +1,10 @@
+<!-- START OF FILE Paste January 28, 2026 - LOCAL OFFLINE VAULT -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tanishq Ravula Vault - Ultra Storage</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tanishq Vault - Local Offline</title>
     <style>
         :root {
             --bg-dark: #0f172a;
@@ -15,15 +16,39 @@
             --text-muted: #94a3b8;
             --danger: #ef4444;
             --success: #10b981;
-            --warning: #f59e0b;
+            --sidebar-width: 280px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; outline: none; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; outline: none; -webkit-tap-highlight-color: transparent; }
         
         body { background-color: var(--bg-dark); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
+        /* --- MOBILE HEADER --- */
+        .mobile-header {
+            display: none;
+            background: #111827;
+            padding: 15px 20px;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #334155;
+            flex-shrink: 0;
+            z-index: 50;
+        }
+        .menu-btn { background: none; border: none; color: white; font-size: 24px; cursor: pointer; }
+
         /* --- SIDEBAR --- */
-        .sidebar { width: 280px; background: #111827; padding: 20px; display: flex; flex-direction: column; border-right: 1px solid #334155; flex-shrink: 0; }
+        .sidebar { 
+            width: var(--sidebar-width); 
+            background: #111827; 
+            padding: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            border-right: 1px solid #334155; 
+            flex-shrink: 0; 
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+
         .logo { font-size: 24px; font-weight: 800; margin-bottom: 30px; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; }
         .logo span { background: linear-gradient(to right, #3b82f6, #0ea5e9); -webkit-background-clip: text; color: transparent; }
 
@@ -45,7 +70,7 @@
         .nav-item.active { background: var(--bg-hover); color: var(--accent); border-left: 3px solid var(--accent); }
         .nav-icon { width: 20px; text-align: center; }
 
-        /* --- AUTH SECTION (NEW) --- */
+        /* --- AUTH / KEY SECTION --- */
         .auth-section { margin-top: auto; padding-top: 20px; border-top: 1px solid #334155; }
         .guid-label { font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; display: block; }
         .guid-input {
@@ -55,7 +80,7 @@
         }
         .guid-input:focus { border-color: var(--accent); }
         
-        .auth-buttons { display: flex; gap: 10px; }
+        .auth-buttons { display: flex; gap: 10px; margin-bottom: 10px; }
         .auth-btn {
             flex: 1; padding: 6px; border: 1px solid #334155; background: var(--bg-panel); 
             color: white; font-size: 11px; border-radius: 6px; cursor: pointer; transition: 0.2s;
@@ -63,17 +88,27 @@
         .auth-btn:hover { background: var(--accent); border-color: var(--accent); }
         .auth-btn.new { background: #334155; }
 
-        .storage-info { margin-top: 20px; padding: 15px; background: rgba(30, 41, 59, 0.5); border-radius: 12px; border: 1px solid #334155; backdrop-filter: blur(5px); }
+        .sync-buttons { display: flex; gap: 10px; margin-bottom: 10px; }
+        .sync-btn {
+            flex: 1; padding: 8px; border: 1px solid #334155; background: var(--bg-panel); 
+            color: white; font-size: 11px; border-radius: 6px; cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center; gap: 5px;
+        }
+        .sync-btn:hover { background: var(--success); border-color: var(--success); }
+        .sync-btn.export:hover { background: #a855f7; border-color: #a855f7; }
+
+        .storage-info { margin-top: 10px; padding: 15px; background: rgba(30, 41, 59, 0.5); border-radius: 12px; border: 1px solid #334155; backdrop-filter: blur(5px); }
         .progress-bar { height: 6px; background: #334155; border-radius: 3px; margin: 12px 0; overflow: hidden; }
         .progress-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #a855f7, #0ea5e9); animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; } 100% { opacity: 0.8; } }
 
         /* --- MAIN CONTENT --- */
+        .main-container { display: flex; flex-direction: column; flex: 1; height: 100%; overflow: hidden; position: relative; }
         .main { flex: 1; padding: 25px; display: flex; flex-direction: column; overflow: hidden; position: relative; }
         
-        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 20px; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 20px; flex-wrap: wrap; }
         
-        .search-container { position: relative; flex: 1; max-width: 500px; }
+        .search-container { position: relative; flex: 1; min-width: 200px; }
         .search-bar { 
             background: var(--bg-panel); border: 1px solid #334155; padding: 12px 20px 12px 45px; 
             border-radius: 10px; width: 100%; color: white; transition: 0.2s; font-size: 14px;
@@ -87,58 +122,48 @@
             border-radius: 8px; cursor: pointer; font-size: 14px;
         }
 
-        .scroll-area { flex: 1; overflow-y: auto; padding-right: 5px; padding-bottom: 20px; }
+        .scroll-area { flex: 1; overflow-y: auto; padding-right: 5px; padding-bottom: 20px; -webkit-overflow-scrolling: touch; }
         .scroll-area::-webkit-scrollbar { width: 8px; }
         .scroll-area::-webkit-scrollbar-track { background: transparent; }
         .scroll-area::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
 
         .grid-container { 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; 
         }
 
-        /* --- FILE CARD DESIGN --- */
+        /* --- FILE CARD --- */
         .file-card {
             background: var(--bg-panel); border: 1px solid #334155; border-radius: 14px;
             padding: 12px; position: relative; transition: all 0.2s ease;
             display: flex; flex-direction: column; user-select: none;
+            cursor: pointer;
         }
-        .file-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        @media (hover: hover) {
+            .file-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+            .file-card:hover .file-preview img { transform: scale(1.05); }
+            .file-card:hover .file-actions { opacity: 1; pointer-events: auto; }
+        }
+        .file-card.mobile-active { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+        .file-card.mobile-active .file-actions { opacity: 1; pointer-events: auto; background: rgba(15, 23, 42, 0.9); }
         
-        /* Thumbnail Area */
         .file-preview {
             height: 140px; background: #0b1120; border-radius: 10px;
             display: flex; align-items: center; justify-content: center;
             margin-bottom: 12px; overflow: hidden; position: relative;
         }
         .file-preview img { width: 100%; height: 100%; object-fit: cover; transition: 0.3s; }
-        .file-card:hover .file-preview img { transform: scale(1.05); }
-
-        /* Custom Pure CSS Icons */
         .icon-generic { font-size: 50px; }
-        
-        .icon-pdf { 
-            width: 50px; height: 65px; background: #ef4444; border-radius: 4px; position: relative; 
-            display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px;
-        }
+        .icon-pdf { width: 50px; height: 65px; background: #ef4444; border-radius: 4px; position: relative; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px; }
         .icon-pdf::after { content: "PDF"; }
-        .icon-pdf::before { 
-            content: ""; position: absolute; top: 0; right: 0; 
-            border-width: 0 15px 15px 0; border-style: solid; border-color: #f87171 #0b1120; display: block; width: 0; 
-        }
-
-        .icon-zip {
-            width: 50px; height: 60px; background: #eab308; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #713f12; font-weight: bold; font-size: 10px;
-        }
+        .icon-zip { width: 50px; height: 60px; background: #eab308; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #713f12; font-weight: bold; font-size: 10px; }
         .icon-zip::after { content: "ZIP"; }
 
-        /* Action Overlay */
         .file-actions {
             position: absolute; inset: 0; background: rgba(15, 23, 42, 0.85);
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            opacity: 0; transition: opacity 0.2s; backdrop-filter: blur(2px); border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            opacity: 0; pointer-events: none; transition: opacity 0.2s; backdrop-filter: blur(2px); border-radius: 10px;
         }
-        .file-card:hover .file-actions { opacity: 1; }
-
+        
         .action-btn {
             background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); 
             color: white; width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
@@ -149,27 +174,25 @@
         .action-btn.fav:hover { background: #ec4899; }
         .action-btn.fav.active { background: #ec4899; color: white; box-shadow: 0 0 10px #ec4899; }
 
-        /* Card Info */
         .file-info { display: flex; flex-direction: column; gap: 4px; }
         .file-name { font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .file-meta { font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; align-items: center; }
-        .tag { font-size: 10px; padding: 3px 8px; border-radius: 4px; background: #334155; color: #cbd5e1; }
 
         /* --- MODAL --- */
         .modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 1000; 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; 
             display: none; flex-direction: column; align-items: center; justify-content: center;
         }
         .modal.active { display: flex; animation: fadeIn 0.2s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        .modal-header { width: 100%; position: absolute; top: 0; padding: 20px; display: flex; justify-content: flex-end; z-index: 1001; }
-        .close-modal { color: white; font-size: 35px; cursor: pointer; opacity: 0.7; transition: 0.2s; }
-        .close-modal:hover { opacity: 1; transform: rotate(90deg); }
+        .modal-header { width: 100%; position: absolute; top: 0; padding: 20px; display: flex; justify-content: flex-end; z-index: 2001; }
+        .close-modal { color: white; font-size: 40px; cursor: pointer; opacity: 0.8; transition: 0.2s; padding: 10px; }
+        .close-modal:hover { opacity: 1; color: var(--danger); }
 
-        .modal-content { max-width: 95%; max-height: 90vh; border: 1px solid #334155; box-shadow: 0 0 50px rgba(0,0,0,0.8); border-radius: 8px; }
+        .modal-content { max-width: 95%; max-height: 85vh; border: 1px solid #334155; box-shadow: 0 0 50px rgba(0,0,0,0.8); border-radius: 8px; }
         
-        #fileInput { display: none; }
+        #fileInput, #importInput { display: none; }
         .empty-state { text-align: center; color: var(--text-muted); margin-top: 100px; width: 100%; }
         .empty-state div { font-size: 40px; margin-bottom: 10px; opacity: 0.5; }
         
@@ -180,17 +203,46 @@
         }
         .delete-all-btn:hover { background: #dc2626; transform: translateY(-1px); }
 
+        .sidebar-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 90;
+            display: none; backdrop-filter: blur(2px);
+        }
+
+        @media (max-width: 900px) {
+            body { flex-direction: column; }
+            .mobile-header { display: flex; }
+            .sidebar { position: fixed; top: 0; left: 0; height: 100%; transform: translateX(-100%); box-shadow: 5px 0 30px rgba(0,0,0,0.5); }
+            .sidebar.active { transform: translateX(0); }
+            .sidebar-overlay.active { display: block; }
+            .main { padding: 15px; width: 100%; }
+            .grid-container { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+            .file-preview { height: 110px; }
+            .top-bar { flex-direction: column; align-items: stretch; gap: 15px; }
+            .controls { justify-content: space-between; }
+            .search-container { max-width: 100%; }
+            .action-btn { width: 42px; height: 42px; font-size: 18px; }
+        }
     </style>
 </head>
 <body>
 
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+        <div class="logo" style="margin:0; font-size: 20px;"><span>⚡</span> Tanishq<span>Vault</span></div>
+        <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+    </div>
+
+    <!-- Backdrop for Mobile Sidebar -->
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <div class="logo"><span>⚡</span> Tanishq Ravula<span>Vault</span></div>
-        <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+        <button class="upload-btn" onclick="triggerUpload()">
             <span>☁</span> Upload Files
         </button>
         <input type="file" id="fileInput" multiple onchange="handleFileUpload(this)">
+        <input type="file" id="importInput" accept=".nebula" onchange="handleImport(this)">
 
         <div class="nav-item active" onclick="switchTab('all')">
             <span class="nav-icon">📂</span> My Storage
@@ -206,50 +258,58 @@
         </div>
 
         <div class="auth-section">
-            <label class="guid-label">🔑 YOUR ACCESS KEY (GUID)</label>
-            <textarea id="guidInput" class="guid-input" rows="2" placeholder="Enter GUID here..."></textarea>
+            <label class="guid-label">🔑 LOCAL ACCESS KEY</label>
+            <textarea id="guidInput" class="guid-input" rows="2" placeholder="Enter Key here..."></textarea>
             <div class="auth-buttons">
                 <button class="auth-btn" onclick="loadUserFromInput()">Load Key</button>
                 <button class="auth-btn new" onclick="generateNewUser()">New Key</button>
+            </div>
+            
+            <div class="sync-buttons">
+                <button class="sync-btn export" onclick="exportVault()">
+                    <span>📤</span> Export
+                </button>
+                <button class="sync-btn" onclick="importVault()">
+                    <span>📥</span> Import
+                </button>
             </div>
         </div>
 
         <div class="storage-info">
             <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:5px; font-weight:600;">
-                <span>USED STORAGE</span>
-                <span style="color:var(--accent)">INFINITE STORAGE</span>
+                <span>DEVICE STORAGE</span>
+                <span style="color:var(--accent)">OFFLINE MODE</span>
             </div>
             <div class="progress-bar"><div class="progress-fill"></div></div>
-            <div style="font-size:10px; color:#94a3b8;">Local-Blob Encryption Active.</div>
+            <div style="font-size:10px; color:#94a3b8; margin-top:5px;" id="storageStats">Loading...</div>
         </div>
     </div>
 
     <!-- Main Content -->
-    <div class="main">
-        <div class="top-bar">
-            <div class="search-container">
-                <span class="search-icon">🔍</span>
-                <input type="text" class="search-bar" placeholder="Search files, types..." id="searchBar" onkeyup="renderFiles()">
+    <div class="main-container">
+        <div class="main">
+            <div class="top-bar">
+                <div class="search-container">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-bar" placeholder="Search files..." id="searchBar" onkeyup="renderFiles()">
+                </div>
+                
+                <div class="controls">
+                    <button class="delete-all-btn" onclick="handleDeleteAll()">Delete All</button> 
+                    <select class="sort-select" id="sortSelect" onchange="renderFiles()">
+                        <option value="date-desc">Newest First</option>
+                        <option value="date-asc">Oldest First</option>
+                        <option value="name-asc">Name (A-Z)</option>
+                        <option value="name-desc">Name (Z-A)</option>
+                        <option value="size-desc">Size (Largest)</option>
+                    </select>
+                </div>
             </div>
-            
-           <div class="controls">
-                <button class="delete-all-btn" onclick="handleDeleteAll()">Delete All</button> 
 
-                <select class="sort-select" id="sortSelect" onchange="renderFiles()">
-                    <option value="date-desc">Newest First</option>
-                    <option value="date-asc">Oldest First</option>
-                    <option value="name-asc">Name (A-Z)</option>
-                    <option value="name-desc">Name (Z-A)</option>
-                    <option value="size-desc">Size (Largest)</option>
-                    <option value="size-asc">Size (Smallest)</option>
-                </select>
-                <div style="width:35px; height:35px; background:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold;">U</div>
-            </div>
-        </div>
-
-        <div class="scroll-area">
-            <div class="grid-container" id="fileGrid">
-                <!-- Files injected here -->
+            <div class="scroll-area">
+                <div class="grid-container" id="fileGrid">
+                    <!-- Files injected here -->
+                </div>
             </div>
         </div>
     </div>
@@ -259,24 +319,24 @@
         <div class="modal-header">
             <span class="close-modal" onclick="closeModal()">✕</span>
         </div>
-        <div id="modalContentWrapper" style="display:flex; justify-content:center; align-items:center; width:100%; height:100%;"></div>
+        <div id="modalContentWrapper" style="display:flex; justify-content:center; align-items:center; width:100%; height:100%; padding: 20px;"></div>
     </div>
 
     <script>
         /**
-         * TANISHQ RAVULA VAULT - CORE LOGIC
+         * TANISHQ RAVULA VAULT - 100% OFFLINE EDITION
+         * Uses IndexedDB for browser-local storage with cross-device sync capability.
          */
 
         let db;
         let currentTab = 'all'; 
         let currentUserGuid = '';
-        let allFilesCache = []; // Cache for sorting/filtering
+        let allFilesCache = []; 
 
-        // 1. INITIALIZATION
         init();
 
         function init() {
-            // Check local storage or generate new
+            // Check for saved key
             const savedGuid = localStorage.getItem('nebula_guid');
             if (savedGuid) {
                 currentUserGuid = savedGuid;
@@ -284,36 +344,34 @@
                 currentUserGuid = crypto.randomUUID();
                 localStorage.setItem('nebula_guid', currentUserGuid);
             }
-            // Populate textarea
             document.getElementById('guidInput').value = currentUserGuid;
         }
 
-        // 2. GUID MANAGEMENT (NEW FEATURES)
-        function loadUserFromInput() {
-            const inputVal = document.getElementById('guidInput').value.trim();
-            if (!inputVal) {
-                alert("Please enter a valid GUID.");
-                return;
-            }
-            // Switch User
-            currentUserGuid = inputVal;
-            localStorage.setItem('nebula_guid', currentUserGuid);
-            loadFiles(); // Reloads files for THIS specific GUID
-            alert(`Switched to User ID: ${currentUserGuid}\nYour files are loaded.`);
+        // --- MOBILE UI FUNCTIONS ---
+        function toggleSidebar() {
+            const sb = document.getElementById('sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            sb.classList.toggle('active');
+            overlay.classList.toggle('active');
         }
 
-        function generateNewUser() {
-            if(!confirm("Generate a NEW User ID? Your current view will be cleared (files remain safe in the other ID).")) return;
-            
-            const newGuid = crypto.randomUUID();
-            currentUserGuid = newGuid;
-            localStorage.setItem('nebula_guid', currentUserGuid);
-            document.getElementById('guidInput').value = currentUserGuid;
-            loadFiles(); // Will be empty initially
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('active');
+            document.querySelector('.sidebar-overlay').classList.remove('active');
         }
 
-        // 3. DATABASE INITIALIZATION (INDEXEDDB)
-        const request = indexedDB.open("NebulaVaultBlobs", 2);
+        function triggerUpload() {
+            document.getElementById('fileInput').click();
+            if (window.innerWidth <= 900) closeSidebar();
+        }
+
+        function importVault() {
+            document.getElementById('importInput').click();
+            if (window.innerWidth <= 900) closeSidebar();
+        }
+
+        // --- CORE DATABASE FUNCTIONS (IndexedDB) ---
+        const request = indexedDB.open("NebulaVaultLocal", 3);
 
         request.onupgradeneeded = function(e) {
             db = e.target.result;
@@ -326,12 +384,224 @@
 
         request.onsuccess = function(e) {
             db = e.target.result;
-            loadFiles(); // Initial Load
+            loadFiles();
+            updateStorageStats();
         };
 
         request.onerror = (e) => console.error("DB Error:", e);
 
-        // 4. FILE UPLOAD
+        // --- KEY MANAGEMENT ---
+        function loadUserFromInput() {
+            const inputVal = document.getElementById('guidInput').value.trim();
+            if (!inputVal) { alert("Please enter a valid Key."); return; }
+            
+            // Check if this is a new key or the same key
+            const isSameKey = inputVal === currentUserGuid;
+            currentUserGuid = inputVal;
+            localStorage.setItem('nebula_guid', currentUserGuid);
+            
+            loadFiles();
+            alert(`Switched to Key: ${currentUserGuid}. \n${isSameKey ? 'Showing existing files for this key.' : 'This is a new key. You need to import files or upload new ones.'}`);
+            
+            if (window.innerWidth <= 900) closeSidebar();
+        }
+
+        function generateNewUser() {
+            if(!confirm("Generate a NEW Key? Current files will be hidden until you switch back.")) return;
+            const newGuid = crypto.randomUUID();
+            currentUserGuid = newGuid;
+            localStorage.setItem('nebula_guid', currentUserGuid);
+            document.getElementById('guidInput').value = currentUserGuid;
+            loadFiles();
+            if (window.innerWidth <= 900) closeSidebar();
+        }
+
+        // --- FILE IMPORT/EXPORT FOR CROSS-DEVICE SYNC ---
+        async function exportVault() {
+            try {
+                // Get all files for current user
+                const files = await getAllFilesForUser();
+                
+                if (files.length === 0) {
+                    alert("No files to export for this key.");
+                    return;
+                }
+                
+                // Process files for export (convert blobs to base64)
+                const exportData = {
+                    version: "1.0",
+                    userId: currentUserGuid,
+                    exportDate: new Date().toISOString(),
+                    fileCount: files.length,
+                    files: []
+                };
+                
+                // Process in chunks to avoid memory issues
+                const chunkSize = 5;
+                for (let i = 0; i < files.length; i += chunkSize) {
+                    const chunk = files.slice(i, i + chunkSize);
+                    
+                    for (const file of chunk) {
+                        // Convert blob to base64
+                        const base64 = await blobToBase64(file.blob);
+                        exportData.files.push({
+                            id: file.id,
+                            name: file.name,
+                            type: file.type,
+                            size: file.size,
+                            date: file.date,
+                            isFavorite: file.isFavorite,
+                            isTrash: file.isTrash,
+                            data: base64.split(',')[1] // Remove data: prefix
+                        });
+                    }
+                }
+                
+                // Create download
+                const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `NebulaVault_${currentUserGuid.substring(0, 8)}_${new Date().toISOString().split('T')[0]}.nebula`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                alert(`Exported ${files.length} files successfully!\n\nIMPORTANT: Save this .nebula file securely.\nTo use on another device:\n1. Load the same key\n2. Click Import\n3. Select this file`);
+                
+            } catch (error) {
+                console.error("Export error:", error);
+                alert("Error exporting files. Make sure you have enough memory.");
+            }
+        }
+
+        async function handleImport(input) {
+            if (!input.files.length) return;
+            
+            const file = input.files[0];
+            if (!file.name.endsWith('.nebula')) {
+                alert("Please select a valid .nebula export file");
+                return;
+            }
+            
+            try {
+                const text = await file.text();
+                const importData = JSON.parse(text);
+                
+                if (importData.userId !== currentUserGuid) {
+                    if (!confirm(`This export is for key: ${importData.userId}\nYour current key is: ${currentUserGuid}\n\nDo you want to switch to the imported key and load these files?`)) {
+                        return;
+                    }
+                    // Switch to imported key
+                    currentUserGuid = importData.userId;
+                    localStorage.setItem('nebula_guid', currentUserGuid);
+                    document.getElementById('guidInput').value = currentUserGuid;
+                }
+                
+                if (!importData.files || importData.files.length === 0) {
+                    alert("No files found in import file.");
+                    return;
+                }
+                
+                if (!confirm(`Import ${importData.files.length} files? This will merge with existing files.`)) {
+                    return;
+                }
+                
+                // Process import
+                const transaction = db.transaction(["files"], "readwrite");
+                const store = transaction.objectStore("files");
+                
+                let importedCount = 0;
+                let skippedCount = 0;
+                
+                for (const fileData of importData.files) {
+                    try {
+                        // Check if file already exists
+                        const existingRequest = store.get(fileData.id);
+                        await new Promise((resolve) => {
+                            existingRequest.onsuccess = async () => {
+                                if (!existingRequest.result) {
+                                    // Convert base64 back to blob
+                                    const binary = atob(fileData.data);
+                                    const bytes = new Uint8Array(binary.length);
+                                    for (let i = 0; i < binary.length; i++) {
+                                        bytes[i] = binary.charCodeAt(i);
+                                    }
+                                    const blob = new Blob([bytes], { type: fileData.type });
+                                    
+                                    // Create file object
+                                    const fileObj = {
+                                        id: fileData.id,
+                                        userId: currentUserGuid,
+                                        name: fileData.name,
+                                        type: fileData.type,
+                                        size: fileData.size,
+                                        date: fileData.date,
+                                        blob: blob,
+                                        isFavorite: fileData.isFavorite || false,
+                                        isTrash: fileData.isTrash || false
+                                    };
+                                    
+                                    store.add(fileObj);
+                                    importedCount++;
+                                } else {
+                                    skippedCount++;
+                                }
+                                resolve();
+                            };
+                        });
+                    } catch (e) {
+                        console.warn("Error importing file:", fileData.name, e);
+                    }
+                }
+                
+                transaction.oncomplete = () => {
+                    loadFiles();
+                    alert(`Import complete!\n\nImported: ${importedCount} files\nSkipped (already exist): ${skippedCount}`);
+                };
+                
+                transaction.onerror = () => {
+                    alert("Error during import. Some files may not have been imported.");
+                };
+                
+            } catch (error) {
+                console.error("Import error:", error);
+                alert("Invalid or corrupted .nebula file.");
+            }
+            
+            // Reset input
+            input.value = '';
+        }
+
+        // --- HELPER FUNCTIONS ---
+        function blobToBase64(blob) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });
+        }
+
+        function getAllFilesForUser() {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject("Database not initialized");
+                    return;
+                }
+                
+                const transaction = db.transaction(["files"], "readonly");
+                const store = transaction.objectStore("files");
+                const index = store.index("userId");
+                const request = index.getAll(currentUserGuid);
+                
+                request.onsuccess = () => resolve(request.result || []);
+                request.onerror = () => reject(request.error);
+            });
+        }
+
+        // --- UPLOAD LOGIC ---
         function handleFileUpload(input) {
             const files = Array.from(input.files);
             if (!files.length) return;
@@ -342,12 +612,12 @@
             files.forEach(file => {
                 const fileData = {
                     id: crypto.randomUUID(),
-                    userId: currentUserGuid, // LINKED TO CURRENT GUID
+                    userId: currentUserGuid, 
                     name: file.name,
                     type: file.type,
                     size: file.size, 
                     date: new Date().toISOString(),
-                    blob: file, 
+                    blob: file,
                     isFavorite: false,
                     isTrash: false
                 };
@@ -356,33 +626,53 @@
 
             transaction.oncomplete = () => {
                 loadFiles();
-                input.value = ''; 
+                updateStorageStats();
+                input.value = '';
+            };
+            transaction.onerror = (e) => {
+                console.error("Upload error:", e);
+                alert("Error saving file. Your browser storage might be full.");
             };
         }
 
-        // 5. TAB NAVIGATION
         function switchTab(tabName) {
             currentTab = tabName;
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             const map = {'all':0, 'recent':1, 'favorites':2, 'trash':3};
             document.querySelectorAll('.nav-item')[map[tabName]].classList.add('active');
             loadFiles();
+            if (window.innerWidth <= 900) closeSidebar();
         }
 
-        // 6. LOAD & RENDER FILES (SCALABLE VIA GUID INDEX)
         function loadFiles() {
-            if (!db) return; // Wait for DB init
+            if (!db) return; 
 
-            // FAST: Only gets files matching the currentUserGuid index
             const transaction = db.transaction(["files"], "readonly");
             const store = transaction.objectStore("files");
             const index = store.index("userId");
             const request = index.getAll(currentUserGuid);
 
             request.onsuccess = function() {
-                allFilesCache = request.result;
+                allFilesCache = request.result || [];
+                renderFiles();
+                updateStorageStats();
+            };
+            request.onerror = function() {
+                allFilesCache = [];
                 renderFiles();
             };
+        }
+
+        function updateStorageStats() {
+            if (!allFilesCache.length) {
+                document.getElementById('storageStats').textContent = "No files stored";
+                return;
+            }
+            
+            const totalSize = allFilesCache.reduce((sum, file) => sum + (file.size || 0), 0);
+            const sizeStr = formatSize(totalSize);
+            document.getElementById('storageStats').textContent = 
+                `${allFilesCache.length} files • ${sizeStr} total`;
         }
 
         function renderFiles() {
@@ -437,6 +727,8 @@
             
             const div = document.createElement('div');
             div.className = 'file-card';
+            // Mobile Interaction: Toggle class on click
+            div.onclick = (e) => toggleCardMobile(e, div);
             
             let previewHTML = '';
             if (isImage) {
@@ -451,21 +743,25 @@
             }
 
             const favClass = file.isFavorite ? 'active' : '';
+            
+            // Generate Buttons
+            const viewBtn = `<button class="action-btn" title="View" onclick="viewFile('${file.id}', event)">👁</button>`;
+            const dlBtn = `<button class="action-btn" title="Download" onclick="downloadFile('${file.id}', event)">⬇</button>`;
+            const favBtn = `<button class="action-btn fav ${favClass}" title="Favorite" onclick="toggleFav('${file.id}', event)">❤</button>`;
             const trashBtn = currentTab === 'trash' 
-                ? `<button class="action-btn delete" title="Delete Permanently" onclick="deletePerm('${file.id}')">✕</button>`
-                : `<button class="action-btn delete" title="Move to Trash" onclick="moveToTrash('${file.id}')">🗑</button>`;
-
+                ? `<button class="action-btn delete" title="Delete Permanently" onclick="deletePerm('${file.id}', event)">✕</button>`
+                : `<button class="action-btn delete" title="Move to Trash" onclick="moveToTrash('${file.id}', event)">🗑</button>`;
             const restoreBtn = currentTab === 'trash'
-                ? `<button class="action-btn" title="Restore" onclick="restoreFile('${file.id}')">♻</button>`
+                ? `<button class="action-btn" title="Restore" onclick="restoreFile('${file.id}', event)">♻</button>`
                 : '';
 
             div.innerHTML = `
                 <div class="file-preview">
                     ${previewHTML}
                     <div class="file-actions">
-                        <button class="action-btn" title="View" onclick="viewFile('${file.id}')">👁</button>
-                        <button class="action-btn" title="Download" onclick="downloadFile('${file.id}')">⬇</button>
-                        ${currentTab !== 'trash' ? `<button class="action-btn fav ${favClass}" title="Favorite" onclick="toggleFav('${file.id}')">❤</button>` : ''}
+                        ${viewBtn}
+                        ${dlBtn}
+                        ${currentTab !== 'trash' ? favBtn : ''}
                         ${restoreBtn}
                         ${trashBtn}
                     </div>
@@ -481,8 +777,18 @@
             return div;
         }
 
-        // 7. ACTION FUNCTIONS
-        function viewFile(id) {
+        function toggleCardMobile(e, card) {
+            if (window.innerWidth <= 900) {
+                if(e.target.closest('.action-btn')) return;
+                document.querySelectorAll('.file-card').forEach(c => {
+                    if (c !== card) c.classList.remove('mobile-active');
+                });
+                card.classList.toggle('mobile-active');
+            }
+        }
+
+        function viewFile(id, e) {
+            if(e) e.stopPropagation(); 
             const file = allFilesCache.find(f => f.id === id);
             if (!file) return;
 
@@ -490,18 +796,34 @@
             const wrapper = document.getElementById('modalContentWrapper');
             wrapper.innerHTML = '';
             
+            const isMobile = window.innerWidth <= 900;
+
             if (file.type.startsWith('image/')) {
-                wrapper.innerHTML = `<img src="${url}" style="max-width:100%; max-height:90vh; box-shadow:0 0 20px black;">`;
-            } else if (file.type === 'application/pdf') {
-                wrapper.innerHTML = `<iframe src="${url}" width="100%" height="100%" style="border:none;"></iframe>`;
-            } else if (file.type.startsWith('video/')) {
-                wrapper.innerHTML = `<video controls src="${url}" style="max-width:100%; max-height:80vh"></video>`;
-            } else {
-                wrapper.innerHTML = `<div style="color:white; text-align:center">
-                    <h2>Preview not supported for this type</h2>
-                    <p>Please download the file.</p>
-                    <button class="upload-btn" onclick="downloadFile('${id}')" style="margin-top:20px">Download Now</button>
-                </div>`;
+                wrapper.innerHTML = `
+                    <div style="display:flex; flex-direction:column; align-items:center; gap:15px; width:100%;">
+                        <img src="${url}" style="max-width:100%; max-height:70vh; border-radius:4px; object-fit:contain;">
+                        ${isMobile ? `<a href="${url}" target="_blank" style="background:var(--accent); color:white; padding:10px 20px; text-decoration:none; border-radius:8px; font-weight:bold;">Open Full Image</a>` : ''}
+                    </div>`;
+            } 
+            else if (file.type.startsWith('video/')) {
+                wrapper.innerHTML = `
+                    <div style="display:flex; flex-direction:column; align-items:center; gap:15px; width:100%;">
+                        <video controls src="${url}" style="max-width:100%; max-height:70vh" playsinline></video>
+                    </div>`;
+            } 
+            else {
+                if (!isMobile && file.type === 'application/pdf') {
+                    wrapper.innerHTML = `<iframe src="${url}" width="100%" height="100%" style="border:none; height:80vh; width:100%;"></iframe>`;
+                } else {
+                    wrapper.innerHTML = `
+                        <div style="color:white; text-align:center; padding: 20px;">
+                            <div style="font-size:50px; margin-bottom:15px;">📄</div>
+                            <h3 style="margin-bottom:10px;">${file.name}</h3>
+                            <a href="${url}" target="_blank" style="background:#3b82f6; color:white; padding:12px 25px; text-decoration:none; border-radius:8px; font-weight:bold; font-size:16px; display:inline-block; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);">
+                                Open File
+                            </a>
+                        </div>`;
+                }
             }
             document.getElementById('viewModal').classList.add('active');
         }
@@ -511,7 +833,8 @@
             document.getElementById('modalContentWrapper').innerHTML = '';
         }
 
-        function downloadFile(id) {
+        function downloadFile(id, e) {
+            if(e) e.stopPropagation();
             const file = allFilesCache.find(f => f.id === id);
             if (!file) return;
             const url = URL.createObjectURL(file.blob);
@@ -524,14 +847,16 @@
             URL.revokeObjectURL(url); 
         }
 
-        function toggleFav(id) {
+        function toggleFav(id, e) {
+            if(e) e.stopPropagation();
             const file = allFilesCache.find(f => f.id === id);
             if (!file) return;
             file.isFavorite = !file.isFavorite;
             updateFileInDB(file);
         }
 
-        function moveToTrash(id) {
+        function moveToTrash(id, e) {
+            if(e) e.stopPropagation();
             const file = allFilesCache.find(f => f.id === id);
             if (!file) return;
             file.isTrash = true;
@@ -539,26 +864,34 @@
             updateFileInDB(file);
         }
 
-        function restoreFile(id) {
+        function restoreFile(id, e) {
+            if(e) e.stopPropagation();
             const file = allFilesCache.find(f => f.id === id);
             if (!file) return;
             file.isTrash = false;
             updateFileInDB(file);
         }
 
-        function deletePerm(id) {
-            if (!confirm("Permanently delete this file? This cannot be undone.")) return;
+        function deletePerm(id, e) {
+            if(e) e.stopPropagation();
+            if (!confirm("Permanently delete this file from browser storage?")) return;
             const transaction = db.transaction(["files"], "readwrite");
             const store = transaction.objectStore("files");
             store.delete(id);
-            transaction.oncomplete = () => loadFiles();
+            transaction.oncomplete = () => {
+                loadFiles();
+                updateStorageStats();
+            };
         }
 
         function updateFileInDB(file) {
             const transaction = db.transaction(["files"], "readwrite");
             const store = transaction.objectStore("files");
             store.put(file);
-            transaction.oncomplete = () => loadFiles();
+            transaction.oncomplete = () => {
+                loadFiles();
+                updateStorageStats();
+            };
         }
 
         function formatSize(bytes) {
@@ -582,14 +915,13 @@
             });
 
             if (targets.length === 0) {
-                alert("No files to delete in this view.");
+                alert("No files to delete here.");
                 return;
             }
 
             const isTrashMode = currentTab === 'trash';
-            const actionName = isTrashMode ? "PERMANENTLY DELETE" : "Move to Trash";
             
-            if (!confirm(`Are you sure you want to ${actionName} all ${targets.length} items in this view?`)) return;
+            if (!confirm(`Apply action to all ${targets.length} items?`)) return;
 
             const transaction = db.transaction(["files"], "readwrite");
             const store = transaction.objectStore("files");
@@ -604,7 +936,10 @@
                 }
             });
 
-            transaction.oncomplete = () => loadFiles();
+            transaction.oncomplete = () => {
+                loadFiles();
+                updateStorageStats();
+            };
         }
     </script>
 </body>
