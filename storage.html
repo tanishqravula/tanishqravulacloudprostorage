@@ -65,10 +65,6 @@
 
     <!-- Custom Styles -->
     <style>
-        body {
-            @apply bg-slate-50 text-slate-900 dark:bg-dark dark:text-slate-100 transition-colors duration-300;
-        }
-
         /* Gradient Text */
         .text-gradient {
             background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
@@ -126,7 +122,7 @@
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     </style>
 </head>
-<body class="antialiased overflow-x-hidden selection:bg-brand-500 selection:text-white">
+<body class="bg-slate-50 text-slate-900 dark:bg-dark dark:text-slate-100 transition-colors duration-300 antialiased overflow-x-hidden selection:bg-brand-500 selection:text-white">
 
     <!-- Navbar -->
     <nav class="fixed w-full z-50 glass-nav transition-all duration-300" id="navbar">
@@ -162,7 +158,7 @@
         </div>
 
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-dark border-b dark:border-slate-800 absolute w-full">
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-dark dark:text-slate-100 border-b dark:border-slate-800 absolute w-full">
             <div class="px-4 py-4 space-y-3">
                 <a href="#about" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">About</a>
                 <a href="#projects" class="block px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800">Projects</a>
@@ -233,11 +229,11 @@
                     <div class="mt-8 flex gap-4">
                         <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-center w-32">
                             <h3 class="font-bold text-2xl text-brand-500">9.2</h3>
-                            <p class="text-xs uppercase text-slate-500 font-semibold">CGPA</p>
+                            <p class="text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold">CGPA</p>
                         </div>
                         <div class="p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-center w-32">
                             <h3 class="font-bold text-2xl text-accent-500">7+</h3>
-                            <p class="text-xs uppercase text-slate-500 font-semibold">Projects</p>
+                            <p class="text-xs uppercase text-slate-500 dark:text-slate-400 font-semibold">Projects</p>
                         </div>
                     </div>
                 </div>
@@ -295,7 +291,7 @@
                     </div>
                     <div>
                         <h3 class="font-heading font-bold text-xl text-slate-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">GeeksForGeeks</h3>
-                        <p class="text-slate-500 text-sm mt-1">View Profile & Solved Problems</p>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">View Profile & Solved Problems</p>
                     </div>
                     <div class="ml-auto text-slate-300 group-hover:text-green-500 transition-colors">
                         <i class="fas fa-arrow-right text-xl"></i>
@@ -309,7 +305,7 @@
                     </div>
                     <div>
                         <h3 class="font-heading font-bold text-xl text-slate-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">LeetCode</h3>
-                        <p class="text-slate-500 text-sm mt-1">View Profile & Ranking</p>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mt-1">View Profile & Ranking</p>
                     </div>
                     <div class="ml-auto text-slate-300 group-hover:text-orange-500 transition-colors">
                         <i class="fas fa-arrow-right text-xl"></i>
@@ -325,7 +321,7 @@
             <div class="text-center mb-20 reveal-up">
                 <span class="text-brand-500 font-bold tracking-wider uppercase text-sm">Portfolio</span>
                 <h2 class="font-heading text-4xl md:text-5xl font-bold mt-2 mb-6">Selected Projects</h2>
-                <p class="text-slate-500 max-w-2xl mx-auto">A collection of AI-driven applications, full-stack platforms, and enterprise solutions.</p>
+                <p class="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">A collection of AI-driven applications, full-stack platforms, and enterprise solutions.</p>
             </div>
 
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -498,7 +494,7 @@
                         <div class="relative pl-8">
                             <div class="absolute -left-[9px] top-2 h-4 w-4 rounded-full bg-blue-500 ring-4 ring-white dark:ring-dark"></div>
                             <h3 class="font-bold text-xl">Software Developer</h3>
-                            <div class="text-slate-500 text-sm mb-3">Deloitte | Sept 2024 - Present</div>
+                            <div class="text-slate-500 dark:text-slate-400 text-sm mb-3">Deloitte | Sept 2024 - Present</div>
                             <ul class="list-disc list-outside ml-4 text-slate-600 dark:text-slate-300 text-sm space-y-2">
                                 <li>Architect and maintain enterprise-grade applications utilizing C#, SQL, .NET, and Angular Typescript for daily mission-critical operations.</li>
                                 <li>Engineered an automated K-1 form processing application leveraging OCR APIs to extract high-fidelity data from PDF sources.</li>
@@ -518,20 +514,20 @@
                         <div class="relative pl-8">
                             <div class="absolute -left-[9px] top-2 h-4 w-4 rounded-full bg-purple-500 ring-4 ring-white dark:ring-dark"></div>
                             <h3 class="font-bold text-xl">B.E in Computer Science</h3>
-                            <div class="text-slate-500 text-sm mb-1">Vasavi College of Engineering | 2024</div>
+                            <div class="text-slate-500 dark:text-slate-400 text-sm mb-1">Vasavi College of Engineering | 2024</div>
                             <div class="font-bold text-brand-500">CGPA: 9.2</div>
                         </div>
                         <div class="relative pl-8">
                             <div class="absolute -left-[9px] top-2 h-4 w-4 rounded-full bg-slate-300 ring-4 ring-white dark:ring-dark"></div>
                             <h3 class="font-bold text-lg">Class XII (CBSE)</h3>
-                            <div class="text-slate-500 text-sm mb-1">Sri Chaitanya Techno School | 2020</div>
-                            <div class="text-slate-500 text-sm">Score: 90%</div>
+                            <div class="text-slate-500 dark:text-slate-400 text-sm mb-1">Sri Chaitanya Techno School | 2020</div>
+                            <div class="text-slate-500 dark:text-slate-400 text-sm">Score: 90%</div>
                         </div>
                         <div class="relative pl-8">
                             <div class="absolute -left-[9px] top-2 h-4 w-4 rounded-full bg-slate-300 ring-4 ring-white dark:ring-dark"></div>
                             <h3 class="font-bold text-lg">Class X (CBSE)</h3>
-                            <div class="text-slate-500 text-sm mb-1">Sri Chaitanya Techno School | 2018</div>
-                            <div class="text-slate-500 text-sm">Score: 90%</div>
+                            <div class="text-slate-500 dark:text-slate-400 text-sm mb-1">Sri Chaitanya Techno School | 2018</div>
+                            <div class="text-slate-500 dark:text-slate-400 text-sm">Score: 90%</div>
                         </div>
                     </div>
                 </div>
@@ -612,23 +608,23 @@
         <div class="max-w-3xl mx-auto px-4 text-center">
             <div class="reveal-up">
                 <h2 class="font-heading text-4xl font-bold mb-4">Let's Build Something Amazing</h2>
-                <p class="text-slate-500 mb-10">I'm currently looking for new opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!</p>
+                <p class="text-slate-500 dark:text-slate-400 mb-10">I'm currently looking for new opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!</p>
                 
                 <div class="bg-white dark:bg-card p-8 rounded-3xl shadow-xl border border-slate-100 dark:border-slate-800">
                     <form action="mailto:tanishqravula@gmail.com" method="post" enctype="text/plain" class="space-y-4 text-left">
                         <div class="grid md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-bold mb-2">Name</label>
-                                <input type="text" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all">
+                                <input type="text" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all">
                             </div>
                             <div>
                                 <label class="block text-sm font-bold mb-2">Email</label>
-                                <input type="email" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all">
+                                <input type="email" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all">
                             </div>
                         </div>
                         <div>
                             <label class="block text-sm font-bold mb-2">Message</label>
-                            <textarea rows="4" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all"></textarea>
+                            <textarea rows="4" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all"></textarea>
                         </div>
                         <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-brand-600 to-accent-500 text-white font-bold text-lg hover:shadow-lg hover:opacity-90 transition-all">
                             Send Message
@@ -641,7 +637,7 @@
 
     <!-- Footer -->
     <footer class="py-8 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-dark text-center">
-        <p class="text-slate-500 text-sm">Designed & Built by <span class="text-slate-900 dark:text-white font-bold">Ravula Tanishq</span> © 2026</p>
+        <p class="text-slate-500 dark:text-slate-400 text-sm">Designed & Built by <span class="text-slate-900 dark:text-white font-bold">Ravula Tanishq</span> © 2026</p>
     </footer>
 
     <!-- Scripts -->
